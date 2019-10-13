@@ -34,6 +34,8 @@ public:
     void sort1();
 
     void sort2();
+
+    void sort3();
 };
 
 template<typename T>
@@ -79,12 +81,33 @@ void DataSet<T>::sort1() {
             subset1.add_element(1, elements[i].data);
     }
 
-    for (int i = 0; i < subset0.size; i++){
+    for (int i = 0; i < subset0.size; i++) {
         elements[i] = subset0.elements[i];
     }
 
-    for (int i = 0; i < subset1.size; i++){
+    for (int i = 0; i < subset1.size; i++) {
         elements[subset0.size + i] = subset1.elements[i];
+    }
+}
+
+template<typename T>
+void DataSet<T>::sort2() {
+    int left = 0, right = size - 1;
+    bool flag;
+    while (left < right) {
+        flag = false;
+        if (elements[left].key == 0) {
+            left++;
+            flag = true;
+        }
+        if (elements[right].key == 1) {
+            right--;
+            flag = true;
+        }
+        if (flag) continue;
+        Node<T> tmp = elements[right];
+        elements[right] = elements[left];
+        elements[left] = tmp;
     }
 }
 
@@ -100,7 +123,7 @@ int main() {
     set.add_element(1, 5);
     set.add_element(0, 2);
     set.print();
-    set.sort1();
+    set.sort2();
     set.print();
 
     return 0;
