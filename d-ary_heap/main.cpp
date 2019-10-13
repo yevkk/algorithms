@@ -43,6 +43,26 @@ private:
         }
     }
 
+    void restore_down(int index) {
+        int max_child_i;
+        while (true) {
+            if ((index * d + 1) >= size) break;
+            max_child_i = -1;
+            for (int i = 1; i <= d; i++) {
+                if ((elements[index] < elements[i]) && (elements[max_child_i] < elements[i])) {
+                    max_child_i = i;
+                }
+            }
+            if (max_child_i != -1) {
+                int tmp = elements[index];
+                elements[index] = elements[max_child_i];
+                elements[max_child_i] = tmp;
+
+                index = max_child_i;
+            } else break;
+        }
+    }
+
 public:
     Heap() = default;
 
