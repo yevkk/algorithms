@@ -95,6 +95,20 @@ public:
         return res;
     }
 
+    void increase_key(int key, int step, int index = 0) {
+        if (index >= size) return;
+        if (elements[index] == key) {
+            elements[index] += step;
+            restore_up(index);
+            return;
+        }
+        for (int i = 1; i <= d; i++) {
+            if (elements[index * d + i] >= key)
+                increase_key(key, step, index * d + i);
+        }
+    }
+
+
     void print(int lvl = 0, int index = 0) {
         if (index >= size) return;
         for (int i = 0; i < lvl; i++) {
@@ -105,46 +119,9 @@ public:
             print(lvl + 1, (d * index + i));
         }
     }
+
 };
 
 int main() {
-    Heap heap(3);
-    heap.insert(10);
-    heap.insert(14);
-    heap.insert(3);
-    heap.insert(7);
-    heap.insert(15);
-    heap.insert(9);
-    heap.insert(5);
-    heap.insert(8);
-    heap.insert(3);
-    heap.insert(21);
-    heap.insert(14);
-    heap.insert(7);
-    heap.insert(13);
-    heap.insert(2);
-    heap.insert(1);
-    heap.insert(12);
-    heap.insert(11);
-    heap.insert(9);
-    heap.insert(23);
-    heap.insert(26);
-    heap.insert(2);
-
-    heap.print();
-    std::cout << std::endl;
-
-
-    heap.extract_max();
-    heap.extract_max();
-    heap.extract_max();
-    heap.extract_max();
-    heap.extract_max();
-
-
-
-    heap.print();
-
-
     return 0;
 }
