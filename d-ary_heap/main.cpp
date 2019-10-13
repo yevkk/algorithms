@@ -18,6 +18,16 @@ private:
         delete tmp;
     }
 
+    void shrink_capacity() {
+        capacity /= 2;
+
+        int *tmp = elements;
+        elements = new int[capacity];
+        for (int i = 0; i < size; i++)
+            elements[i] = tmp[i];
+        delete tmp;
+    }
+
     void restore_up(int index) {
         int parent_i;
         while (true) {
