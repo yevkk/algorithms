@@ -111,20 +111,23 @@ void DataSet<T>::sort2() {
     }
 }
 
-int main() {
-    DataSet<int> set;
-    set.add_element(0, 3);
-    set.add_element(1, 7);
-    set.add_element(1, 4);
-    set.add_element(0, 3);
-    set.add_element(0, 11);
-    set.add_element(1, 8);
-    set.add_element(0, 13);
-    set.add_element(1, 5);
-    set.add_element(0, 2);
-    set.print();
-    set.sort2();
-    set.print();
+template<typename T>
+void DataSet<T>::sort3() {
+    bool flag;
+    for (int i = 0; i < size; i++) {
+        flag = true;
+        for (int j = 0; j < size - 1; j++) {
+            if (elements[j + 1].key < elements[j].key) {
+                flag = false;
+                Node<T> tmp = elements[j + 1];
+                elements[j + 1] = elements[j];
+                elements[j] = tmp;
+            }
+        }
+        if (flag) break;
+    }
+}
 
+int main() {
     return 0;
 }
