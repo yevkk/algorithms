@@ -1,5 +1,5 @@
 # Ones and zeros sort
-We have a set of data nodes, each node has a key 0 or 1.
+We have a set of data nodes, each node has a sort key 0 or 1.
 
 **Sorting requirement:**
 1) time complexity *O(n)*;
