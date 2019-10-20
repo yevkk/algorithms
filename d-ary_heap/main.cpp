@@ -1,4 +1,6 @@
 #include <iostream>
+#include <ctime>
+#include <random>
 
 class Heap {
 private:
@@ -8,24 +10,24 @@ private:
     int *elements;
 
     void grow_capacity() {
+        int c = capacity;
         if (capacity < 100) capacity *= 4;
         else capacity *= 2;
 
         int *tmp = elements;
         elements = new int[capacity];
-        for (int i = 0; i < size; i++)
-            elements[i] = tmp[i];
-        delete tmp;
+        std::copy(tmp + 0, tmp + c, elements);
+        delete[] tmp;
     }
 
     void shrink_capacity() {
+        int c = capacity;
         capacity /= 2;
 
         int *tmp = elements;
         elements = new int[capacity];
-        for (int i = 0; i < size; i++)
-            elements[i] = tmp[i];
-        delete tmp;
+        std::copy(tmp + 0, tmp + c, elements);
+        delete[] tmp;
     }
 
     void restore_up(int index) {
@@ -122,6 +124,40 @@ public:
 
 };
 
+int rand_int(int min, int max) {
+    static std::random_device rd;
+    static std::seed_seq seed{rd(), static_cast<unsigned int>(time(nullptr))};
+    static std::mt19937_64 gen(seed);
+    std::uniform_int_distribution<int> dist(min, max);
+
+    return dist(gen);
+}
+
+const int P = 15;
+
 int main() {
+    Heap heap(4);
+    for (int i = 0; i < P; i++)
+        heap.insert(rand_int(0, 20));
+
+    heap.print();
+    std::cout << std::endl;
+
+    heap.increase_key(10, 50);
+    heap.increase_key(15, 50);
+    heap.increase_key(17, 50);
+    heap.increase_key(18, 50);
+
+    heap.print();
+    std::cout << std::endl;
+
+    int array[P];
+
+    for (auto &e:array)
+        e = heap.extract_max();
+
+    for (auto &e:array)
+        std::cout << e << "  ";
+
     return 0;
 }
