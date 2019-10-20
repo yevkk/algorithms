@@ -3,4 +3,4 @@ project(strassen_algorithm)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(strassen_algorithm main.cpp)
+add_executable(strassen_algorithm main.cpp matrix.cpp matrix.hpp)
