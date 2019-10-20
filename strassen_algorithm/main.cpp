@@ -95,7 +95,79 @@ Matrix matrixMultipty(const Matrix &A, const Matrix &B) {
     return C;
 }
 
+Matrix strassenAlgorithmStep(const Matrix &A, const Matrix &B, const int &size) {
+    if (size == 2) return matrixMultipty(A, B);
 
+    Matrix A11(size / 2, size / 2, true);
+    Matrix A12(size / 2, size / 2, true);
+    Matrix A21(size / 2, size / 2, true);
+    Matrix A22(size / 2, size / 2, true);
+    Matrix B11(size / 2, size / 2, true);
+    Matrix B12(size / 2, size / 2, true);
+    Matrix B21(size / 2, size / 2, true);
+    Matrix B22(size / 2, size / 2, true);
+
+    for (int i = 0; i < size / 2; i++) {
+        for (int j = 0; j < size / 2; j++) {
+            A11.elements[i][j] = A.elements[i][j];
+            A12.elements[i][j] = A.elements[i][j + size / 2];
+            A11.elements[i][j] = A.elements[i + size / 2][j];
+            A22.elements[i][j] = A.elements[i + size / 2][j + size / 2];
+
+            B11.elements[i][j] = B.elements[i][j];
+            B12.elements[i][j] = B.elements[i][j + size / 2];
+            B11.elements[i][j] = B.elements[i + size / 2][j];
+            B22.elements[i][j] = B.elements[i + size / 2][j + size / 2];
+        }
+    }
+
+    Matrix P = strassenAlgorithmStep(A11 + A22, B11 + B22, size / 2);
+    Matrix Q = strassenAlgorithmStep(A21 + A22, B11, size / 2);
+    Matrix R = strassenAlgorithmStep(A11, B12 - B22, size / 2);
+    Matrix S = strassenAlgorithmStep(A22, B21 - B11, size / 2);
+    Matrix T = strassenAlgorithmStep(A11 + A12, B22, size / 2);
+    Matrix U = strassenAlgorithmStep(A21 - A11, B11 + B12, size / 2);
+    Matrix V = strassenAlgorithmStep(A12 - A22, B21 + B22, size / 2);
+
+    Matrix C11 = P + S - T + V;
+    Matrix C12 = R + T;
+    Matrix C21 = Q + S;
+    Matrix C22 = P + R - Q + U;
+
+    Matrix C(size, size, true);
+
+    for (int i = 0; i < size / 2; i++) {
+        for (int j = 0; j < size / 2; j++) {
+            C.elements[i][j] = C11.elements[i][j];
+            C.elements[i][j + size / 2] = C12.elements[i][j];
+            C.elements[i + size / 2][j] = C21.elements[i][j];
+            C.elements[i + size / 2][j + size / 2] = C22.elements[i][j];
+        }
+    }
+
+    return C;
+}
+
+Matrix strassenAlgorithm(const Matrix &A, const Matrix &B) {
+    if ((A.size.rows != B.size.columns) || (A.size.columns != B.size.rows))
+        return A;
+    int new_size = 1, curr_size = (A.size.rows < A.size.columns) ? A.size.columns : A.size.rows;
+    while (new_size < curr_size)
+        new_size *= 2;
+
+    Matrix new_A(new_size, new_size, true);
+    Matrix new_B(new_size, new_size, true);
+
+    for (int i = 0; i < A.size.rows; i++)
+        std::copy(A.elements[i] + 0, A.elements[i] + A.size.columns, new_A.elements[i]);
+
+    for (int i = 0; i < B.size.rows; i++)
+        std::copy(B.elements[i] + 0, B.elements[i] + B.size.columns, new_B.elements[i]);
+
+
+
+    return strassenAlgorithmStep(new_A, new_B, new_size);
+}
 
 int main() {
     int a[] = {1, 2, 3, 4, 2, 3, 4, 5, 3, 4, 5, 6};
@@ -103,5 +175,7 @@ int main() {
     Matrix M1(a, 3, 4);
     Matrix M2(b, 4, 3);
     matrixMultipty(M1, M2).print();
+    std::cout << std::endl;
+    strassenAlgorithm(M1, M2).print();
     return 0;
 }
