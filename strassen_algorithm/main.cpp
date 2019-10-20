@@ -111,12 +111,12 @@ Matrix strassenAlgorithmStep(const Matrix &A, const Matrix &B, const int &size) 
         for (int j = 0; j < size / 2; j++) {
             A11.elements[i][j] = A.elements[i][j];
             A12.elements[i][j] = A.elements[i][j + size / 2];
-            A11.elements[i][j] = A.elements[i + size / 2][j];
+            A21.elements[i][j] = A.elements[i + size / 2][j];
             A22.elements[i][j] = A.elements[i + size / 2][j + size / 2];
 
             B11.elements[i][j] = B.elements[i][j];
             B12.elements[i][j] = B.elements[i][j + size / 2];
-            B11.elements[i][j] = B.elements[i + size / 2][j];
+            B21.elements[i][j] = B.elements[i + size / 2][j];
             B22.elements[i][j] = B.elements[i + size / 2][j + size / 2];
         }
     }
@@ -163,8 +163,6 @@ Matrix strassenAlgorithm(const Matrix &A, const Matrix &B) {
 
     for (int i = 0; i < B.size.rows; i++)
         std::copy(B.elements[i] + 0, B.elements[i] + B.size.columns, new_B.elements[i]);
-
-
 
     return strassenAlgorithmStep(new_A, new_B, new_size);
 }
