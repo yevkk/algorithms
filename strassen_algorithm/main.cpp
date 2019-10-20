@@ -49,7 +49,8 @@ public:
     }
 
     Matrix operator+(const Matrix &M) {
-        if ((this->size.rows != M.size.rows) || (this->size.columns != M.size.columns)) return *(new Matrix(0, 0));
+        if ((this->size.rows != M.size.rows) || (this->size.columns != M.size.columns))
+            return *(this);
 
         Matrix res(this->size.rows, this->size.columns, true);
         for (int i = 0; i < this->size.rows; i++)
@@ -60,7 +61,8 @@ public:
     }
 
     Matrix operator-(const Matrix &M) {
-        if ((this->size.rows != M.size.rows) || (this->size.columns != M.size.columns)) return *(new Matrix(0, 0));
+        if ((this->size.rows != M.size.rows) || (this->size.columns != M.size.columns))
+            return *(this);
 
         Matrix res(this->size.rows, this->size.columns, true);
         for (int i = 0; i < this->size.rows; i++)
@@ -81,12 +83,25 @@ public:
     }
 };
 
-int main() {
-    int a[] = {3, 2, 3, 2, 6, 7, 8, 9, 1, 2, 3, 4};
-    //for (int i = 0; i < 4; i++)
-    //a[i] = new int[4];
+Matrix matrixMultipty(const Matrix &A, const Matrix &B) {
+    if ((A.size.rows != B.size.columns) || (A.size.columns != B.size.rows))
+        return A;
 
-    Matrix M(a, 3, 4);
-    M.print();
+    Matrix C(A.size.rows, B.size.columns, true);
+    for (int i = 0; i < A.size.rows; i++)
+        for (int j = 0; j < B.size.columns; j++)
+            for (int k = 0; k < A.size.columns; k++)
+                C.elements[i][j] += A.elements[i][k] * B.elements[k][j];
+    return C;
+}
+
+
+
+int main() {
+    int a[] = {1, 2, 3, 4, 2, 3, 4, 5, 3, 4, 5, 6};
+    int b[] = {1, 2, 3, 4, 2, 3, 4, 5, 3, 4, 5, 6};
+    Matrix M1(a, 3, 4);
+    Matrix M2(b, 4, 3);
+    matrixMultipty(M1, M2).print();
     return 0;
 }
