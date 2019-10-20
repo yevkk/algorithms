@@ -23,15 +23,6 @@ public:
 
     int **elements;
 
-    Matrix(int *array, const int &size_r, const int &size_c) {
-        elements = new int *[size_r];
-        for (int i = 0; i < size_r; i++) {
-            elements[i] = new int[size_c];
-            std::copy(array + i * size_c, array + i * size_c + size_r + 1, elements[i]);
-        }
-        size = {size_r, size_c};
-    }
-
     Matrix(const int &size_r, const int &size_c, const int &zero_flag = 0) {
         elements = new int *[size_r];
         for (int i = 0; i < size_r; i++) {
@@ -42,17 +33,12 @@ public:
         size = {size_r, size_c};
     }
 
-    ~Matrix() {
-        for (int i = 0; i < size.rows; i++)
-            delete[] elements[i];
-        delete &size;
-    }
-
     Matrix operator+(const Matrix &M) {
+        Matrix res(this->size.rows, this->size.columns, true);
+
         if ((this->size.rows != M.size.rows) || (this->size.columns != M.size.columns))
             return *(this);
 
-        Matrix res(this->size.rows, this->size.columns, true);
         for (int i = 0; i < this->size.rows; i++)
             for (int j = 0; j < this->size.columns; j++)
                 res.elements[i][j] = this->elements[i][j] + M.elements[i][j];
@@ -61,10 +47,11 @@ public:
     }
 
     Matrix operator-(const Matrix &M) {
+        Matrix res(this->size.rows, this->size.columns, true);
+
         if ((this->size.rows != M.size.rows) || (this->size.columns != M.size.columns))
             return *(this);
 
-        Matrix res(this->size.rows, this->size.columns, true);
         for (int i = 0; i < this->size.rows; i++)
             for (int j = 0; j < this->size.columns; j++)
                 res.elements[i][j] = this->elements[i][j] - M.elements[i][j];
@@ -84,10 +71,11 @@ public:
 };
 
 Matrix matrixMultipty(const Matrix &A, const Matrix &B) {
+    Matrix C(A.size.rows, B.size.columns, true);
+
     if ((A.size.rows != B.size.columns) || (A.size.columns != B.size.rows))
         return A;
 
-    Matrix C(A.size.rows, B.size.columns, true);
     for (int i = 0; i < A.size.rows; i++)
         for (int j = 0; j < B.size.columns; j++)
             for (int k = 0; k < A.size.columns; k++)
@@ -108,17 +96,15 @@ Matrix strassenAlgorithmStep(const Matrix &A, const Matrix &B, const int &size) 
     Matrix B22(size / 2, size / 2, true);
 
     for (int i = 0; i < size / 2; i++) {
-        for (int j = 0; j < size / 2; j++) {
-            A11.elements[i][j] = A.elements[i][j];
-            A12.elements[i][j] = A.elements[i][j + size / 2];
-            A21.elements[i][j] = A.elements[i + size / 2][j];
-            A22.elements[i][j] = A.elements[i + size / 2][j + size / 2];
+        std::copy(A.elements[i] + 0, A.elements[i] + size / 2 + 1, A11.elements[i]);
+        std::copy(A.elements[i] + size / 2, A.elements[i] + size + 1, A12.elements[i]);
+        std::copy(A.elements[i + size / 2], A.elements[i + size / 2] + size / 2 + 1, A21.elements[i]);
+        std::copy(A.elements[i + size / 2] + size / 2, A.elements[i + size / 2] + size + 1, A22.elements[i]);
 
-            B11.elements[i][j] = B.elements[i][j];
-            B12.elements[i][j] = B.elements[i][j + size / 2];
-            B21.elements[i][j] = B.elements[i + size / 2][j];
-            B22.elements[i][j] = B.elements[i + size / 2][j + size / 2];
-        }
+        std::copy(B.elements[i] + 0, B.elements[i] + size / 2 + 1, B11.elements[i]);
+        std::copy(B.elements[i] + size / 2, B.elements[i] + size + 1, B12.elements[i]);
+        std::copy(B.elements[i + size / 2], B.elements[i + size / 2] + size / 2 + 1, B21.elements[i]);
+        std::copy(B.elements[i + size / 2] + size / 2, B.elements[i + size / 2] + size + 1, B22.elements[i]);
     }
 
     Matrix P = strassenAlgorithmStep(A11 + A22, B11 + B22, size / 2);
@@ -137,12 +123,10 @@ Matrix strassenAlgorithmStep(const Matrix &A, const Matrix &B, const int &size) 
     Matrix C(size, size, true);
 
     for (int i = 0; i < size / 2; i++) {
-        for (int j = 0; j < size / 2; j++) {
-            C.elements[i][j] = C11.elements[i][j];
-            C.elements[i][j + size / 2] = C12.elements[i][j];
-            C.elements[i + size / 2][j] = C21.elements[i][j];
-            C.elements[i + size / 2][j + size / 2] = C22.elements[i][j];
-        }
+        std::copy(C11.elements[i] + 0, C11.elements[i] + size / 2 + 1, C.elements[i]);
+        std::copy(C12.elements[i] + 0, C12.elements[i] + size / 2 + 1, C.elements[i] + size / 2);
+        std::copy(C21.elements[i] + 0, C21.elements[i] + size / 2 + 1, C.elements[i + size / 2]);
+        std::copy(C22.elements[i] + 0, C22.elements[i] + size / 2 + 1, C.elements[i + size / 2] + size / 2);
     }
 
     return C;
@@ -168,12 +152,12 @@ Matrix strassenAlgorithm(const Matrix &A, const Matrix &B) {
 }
 
 int main() {
-    int a[] = {1, 2, 3, 4, 2, 3, 4, 5, 3, 4, 5, 6};
-    int b[] = {1, 2, 3, 4, 2, 3, 4, 5, 3, 4, 5, 6};
-    Matrix M1(a, 3, 4);
-    Matrix M2(b, 4, 3);
-    matrixMultipty(M1, M2).print();
+    Matrix M1(3, 4);
+    Matrix M2(4, 3);
+    M1.print();
+    M2.print();
+    Matrix M3 = strassenAlgorithm(M1, M2);
+    M3.print();
     std::cout << std::endl;
-    strassenAlgorithm(M1, M2).print();
     return 0;
 }
