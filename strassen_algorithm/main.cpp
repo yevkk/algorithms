@@ -48,6 +48,28 @@ public:
         delete &size;
     }
 
+    Matrix operator+(const Matrix &M) {
+        if ((this->size.rows != M.size.rows) || (this->size.columns != M.size.columns)) return *(new Matrix(0, 0));
+
+        Matrix res(this->size.rows, this->size.columns, true);
+        for (int i = 0; i < this->size.rows; i++)
+            for (int j = 0; j < this->size.columns; j++)
+                res.elements[i][j] = this->elements[i][j] + M.elements[i][j];
+
+        return res;
+    }
+
+    Matrix operator-(const Matrix &M) {
+        if ((this->size.rows != M.size.rows) || (this->size.columns != M.size.columns)) return *(new Matrix(0, 0));
+
+        Matrix res(this->size.rows, this->size.columns, true);
+        for (int i = 0; i < this->size.rows; i++)
+            for (int j = 0; j < this->size.columns; j++)
+                res.elements[i][j] = this->elements[i][j] - M.elements[i][j];
+
+        return res;
+    }
+
     void print() {
         for (int i = 0; i < size.rows; i++) {
             std::cout << i << ") ";
