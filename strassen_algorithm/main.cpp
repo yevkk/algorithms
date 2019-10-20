@@ -13,7 +13,7 @@ int rand_int(int min, int max) {
 
 class Matrix {
 private:
-    const int _MIN_RAND_VALUE = 0;
+    const int _MIN_RAND_VALUE = -3;
     const int _MAX_RAND_VALUE = 10;
 public:
     struct {
@@ -148,14 +148,23 @@ Matrix strassenAlgorithm(const Matrix &A, const Matrix &B) {
     for (int i = 0; i < B.size.rows; i++)
         std::copy(B.elements[i] + 0, B.elements[i] + B.size.columns, new_B.elements[i]);
 
-    return strassenAlgorithmStep(new_A, new_B, new_size);
+    Matrix sub_res = strassenAlgorithmStep(new_A, new_B, new_size);
+
+    Matrix res(A.size.rows, B.size.columns, true);
+    for (int i = 0; i < A.size.rows; i++)
+        std::copy(sub_res.elements[i] + 0, sub_res.elements[i] + B.size.columns, res.elements[i]);
+
+    return res;
 }
 
 int main() {
     Matrix M1(3, 4);
     Matrix M2(4, 3);
     M1.print();
+    std::cout << std::endl;
     M2.print();
+    std::cout << std::endl;
+
     Matrix M3 = strassenAlgorithm(M1, M2);
     M3.print();
     std::cout << std::endl;
