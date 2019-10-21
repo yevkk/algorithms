@@ -6,21 +6,25 @@
 
 class Matrix {
 private:
-    const int _MIN_RAND_VALUE = -3;
-    const int _MAX_RAND_VALUE = 10;
-public:
-    struct {
-        int rows;
-        int columns;
-    } size;
+    static const int _MIN_RAND_VALUE = -3;
+    static const int _MAX_RAND_VALUE = 10;
 
-    int **elements;
+    int **_elements;
+public:
+    int rows;
+    int columns;
 
     Matrix(const int &size_r, const int &size_c, const int &zero_flag = 0);
 
-    Matrix operator+(const Matrix &M);
+    int operator()(int index_r, int index_c) const;
 
-    Matrix operator-(const Matrix &M);
+    int &operator()(int index_r, int index_c);
+
+    int *operator()(int index_r) const;
+
+    Matrix operator+(const Matrix &M) const;
+
+    Matrix operator-(const Matrix &M) const;
 
     void print();
 };

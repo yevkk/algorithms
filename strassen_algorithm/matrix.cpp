@@ -2,6 +2,7 @@
 #include <iostream>
 #include <ctime>
 #include <random>
+#include <cassert>
 
 int rand_int(int min, int max) {
     static std::random_device rd;
@@ -14,46 +15,64 @@ int rand_int(int min, int max) {
 
 
 Matrix::Matrix(const int &size_r, const int &size_c, const int &zero_flag) {
-    elements = new int *[size_r];
+    _elements = new int *[size_r];
     for (int i = 0; i < size_r; i++) {
-        elements[i] = new int[size_c];
+        _elements[i] = new int[size_c];
         for (int j = 0; j < size_c; j++)
-            elements[i][j] = (zero_flag) ? 0 : rand_int(_MIN_RAND_VALUE, _MAX_RAND_VALUE);
+            _elements[i][j] = (zero_flag) ? 0 : rand_int(_MIN_RAND_VALUE, _MAX_RAND_VALUE);
     }
-    size = {size_r, size_c};
+    rows = size_r;
+    columns = size_c;
 }
 
-Matrix Matrix::operator+(const Matrix &M) {
-    Matrix res(this->size.rows, this->size.columns, true);
+int Matrix::operator()(int index_r, int index_c) const {
+    assert(index_r < rows && "Out of range");
+    assert(index_c < columns && "Out of range");
+    return _elements[index_r][index_c];
+}
 
-    if ((this->size.rows != M.size.rows) || (this->size.columns != M.size.columns))
+int &Matrix::operator()(int index_r, int index_c) {
+    assert(index_r < rows && "Out of range");
+    assert(index_c < columns && "Out of range");
+    return _elements[index_r][index_c];
+}
+
+int *Matrix::operator()(int index_r) const {
+    assert(index_r < rows && "Out of range");
+    return _elements[index_r];
+}
+
+Matrix Matrix::operator+(const Matrix &M) const {
+    Matrix res(this->rows, this->columns, true);
+
+    if ((this->rows != M.rows) || (this->columns != M.columns))
         return *(this);
 
-    for (int i = 0; i < this->size.rows; i++)
-        for (int j = 0; j < this->size.columns; j++)
-            res.elements[i][j] = this->elements[i][j] + M.elements[i][j];
+    for (int i = 0; i < this->rows; i++)
+        for (int j = 0; j < this->columns; j++)
+            res(i, j) = (*this)(i, j) + M(i, j);
 
     return res;
 }
 
-Matrix Matrix::operator-(const Matrix &M) {
-    Matrix res(this->size.rows, this->size.columns, true);
+Matrix Matrix::operator-(const Matrix &M) const {
+    Matrix res(this->rows, this->columns, true);
 
-    if ((this->size.rows != M.size.rows) || (this->size.columns != M.size.columns))
+    if ((this->rows != M.rows) || (this->columns != M.columns))
         return *(this);
 
-    for (int i = 0; i < this->size.rows; i++)
-        for (int j = 0; j < this->size.columns; j++)
-            res.elements[i][j] = this->elements[i][j] - M.elements[i][j];
+    for (int i = 0; i < this->rows; i++)
+        for (int j = 0; j < this->columns; j++)
+            res(i, j) = (*this)(i, j) - M(i, j);
 
     return res;
 }
 
 void Matrix::print() {
-    for (int i = 0; i < size.rows; i++) {
+    for (int i = 0; i < rows; i++) {
         std::cout << i << ") ";
-        for (int j = 0; j < size.columns; j++) {
-            std::cout << elements[i][j] << ' ';
+        for (int j = 0; j < columns; j++) {
+            std::cout << _elements[i][j] << ' ';
         }
         std::cout << std::endl;
     }
@@ -61,15 +80,15 @@ void Matrix::print() {
 
 
 Matrix matrixMultipty(const Matrix &A, const Matrix &B) {
-    Matrix C(A.size.rows, B.size.columns, true);
+    Matrix C(A.rows, B.columns, true);
 
-    if ((A.size.rows != B.size.columns) || (A.size.columns != B.size.rows))
+    if ((A.rows != B.columns) || (A.columns != B.rows))
         return A;
 
-    for (int i = 0; i < A.size.rows; i++)
-        for (int j = 0; j < B.size.columns; j++)
-            for (int k = 0; k < A.size.columns; k++)
-                C.elements[i][j] += A.elements[i][k] * B.elements[k][j];
+    for (int i = 0; i < A.rows; i++)
+        for (int j = 0; j < B.columns; j++)
+            for (int k = 0; k < A.columns; k++)
+                C(i, j) += A(i, k) * B(k, j);
     return C;
 }
 
@@ -86,15 +105,15 @@ Matrix strassenAlgorithmStep(const Matrix &A, const Matrix &B, const int &size) 
     Matrix B22(size / 2, size / 2, true);
 
     for (int i = 0; i < size / 2; i++) {
-        std::copy(A.elements[i] + 0, A.elements[i] + size / 2 + 1, A11.elements[i]);
-        std::copy(A.elements[i] + size / 2, A.elements[i] + size + 1, A12.elements[i]);
-        std::copy(A.elements[i + size / 2], A.elements[i + size / 2] + size / 2 + 1, A21.elements[i]);
-        std::copy(A.elements[i + size / 2] + size / 2, A.elements[i + size / 2] + size + 1, A22.elements[i]);
+        std::copy(A(i) + 0, A(i) + size / 2 + 1, A11(i));
+        std::copy(A(i) + size / 2, A(i) + size + 1, A12(i));
+        std::copy(A(i + size / 2), A(i + size / 2) + size / 2 + 1, A21(i));
+        std::copy(A(i + size / 2) + size / 2, A(i + size / 2) + size + 1, A22(i));
 
-        std::copy(B.elements[i] + 0, B.elements[i] + size / 2 + 1, B11.elements[i]);
-        std::copy(B.elements[i] + size / 2, B.elements[i] + size + 1, B12.elements[i]);
-        std::copy(B.elements[i + size / 2], B.elements[i + size / 2] + size / 2 + 1, B21.elements[i]);
-        std::copy(B.elements[i + size / 2] + size / 2, B.elements[i + size / 2] + size + 1, B22.elements[i]);
+        std::copy(B(i) + 0, B(i) + size / 2 + 1, B11(i));
+        std::copy(B(i) + size / 2, B(i) + size + 1, B12(i));
+        std::copy(B(i + size / 2), B(i + size / 2) + size / 2 + 1, B21(i));
+        std::copy(B(i + size / 2) + size / 2, B(i + size / 2) + size + 1, B22(i));
     }
 
     Matrix P = strassenAlgorithmStep(A11 + A22, B11 + B22, size / 2);
@@ -113,36 +132,36 @@ Matrix strassenAlgorithmStep(const Matrix &A, const Matrix &B, const int &size) 
     Matrix C(size, size, true);
 
     for (int i = 0; i < size / 2; i++) {
-        std::copy(C11.elements[i] + 0, C11.elements[i] + size / 2 + 1, C.elements[i]);
-        std::copy(C12.elements[i] + 0, C12.elements[i] + size / 2 + 1, C.elements[i] + size / 2);
-        std::copy(C21.elements[i] + 0, C21.elements[i] + size / 2 + 1, C.elements[i + size / 2]);
-        std::copy(C22.elements[i] + 0, C22.elements[i] + size / 2 + 1, C.elements[i + size / 2] + size / 2);
+        std::copy(C11(i) + 0, C11(i) + size / 2 + 1, C(i));
+        std::copy(C12(i) + 0, C12(i) + size / 2 + 1, C(i) + size / 2);
+        std::copy(C21(i) + 0, C21(i) + size / 2 + 1, C(i + size / 2));
+        std::copy(C22(i) + 0, C22(i) + size / 2 + 1, C(i + size / 2) + size / 2);
     }
 
     return C;
 }
 
 Matrix strassenAlgorithm(const Matrix &A, const Matrix &B) {
-    if ((A.size.rows != B.size.columns) || (A.size.columns != B.size.rows))
+    if ((A.rows != B.columns) || (A.columns != B.rows))
         return A;
-    int new_size = 1, curr_size = (A.size.rows < A.size.columns) ? A.size.columns : A.size.rows;
+    int new_size = 1, curr_size = (A.rows < A.columns) ? A.columns : A.rows;
     while (new_size < curr_size)
         new_size *= 2;
 
     Matrix new_A(new_size, new_size, true);
     Matrix new_B(new_size, new_size, true);
 
-    for (int i = 0; i < A.size.rows; i++)
-        std::copy(A.elements[i] + 0, A.elements[i] + A.size.columns, new_A.elements[i]);
+    for (int i = 0; i < A.rows; i++)
+        std::copy(A(i) + 0, A(i) + A.columns, new_A(i));
 
-    for (int i = 0; i < B.size.rows; i++)
-        std::copy(B.elements[i] + 0, B.elements[i] + B.size.columns, new_B.elements[i]);
+    for (int i = 0; i < B.rows; i++)
+        std::copy(B(i) + 0, B(i) + B.columns, new_B(i));
 
     Matrix sub_res = strassenAlgorithmStep(new_A, new_B, new_size);
 
-    Matrix res(A.size.rows, B.size.columns, true);
-    for (int i = 0; i < A.size.rows; i++)
-        std::copy(sub_res.elements[i] + 0, sub_res.elements[i] + B.size.columns, res.elements[i]);
+    Matrix res(A.rows, B.columns, true);
+    for (int i = 0; i < A.rows; i++)
+        std::copy(sub_res(i) + 0, sub_res(i) + B.columns, res(i));
 
     return res;
 }

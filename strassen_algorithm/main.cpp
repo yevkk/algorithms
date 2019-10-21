@@ -31,8 +31,8 @@ void benchmark(const int &n) {
 }
 
 int main() {
-    Matrix M1(100, 80);
-    Matrix M2(80, 100);
+    Matrix M1(10, 10);
+    Matrix M2(10, 10);
     M1.print();
     std::cout << std::endl;
     M2.print();
