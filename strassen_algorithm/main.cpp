@@ -20,7 +20,7 @@ void benchmark(const int &n) {
     std::cout << "BENCHMARK" << std::endl;
     std::cout << "matrix size (N x N) || classic multiplication (ns) || strassen algorithm (ns)" << std::endl;
 
-    for (int i = n; i >= 2; i -= 20) {
+    for (int i = n; i >= 2; i -= 5) {
         Matrix A(i, i), B(i, i);
         std::cout << i << "  x " << i << " || ";
 
@@ -31,8 +31,8 @@ void benchmark(const int &n) {
 }
 
 int main() {
-    Matrix M1(10, 10);
-    Matrix M2(10, 10);
+    Matrix M1(20, 10);
+    Matrix M2(10, 20);
     M1.print();
     std::cout << std::endl;
     M2.print();
@@ -41,6 +41,6 @@ int main() {
     Matrix M3 = strassenAlgorithm(M1, M2);
     M3.print();
     std::cout << std::endl;
-//    benchmark(200);
+//    benchmark(50);
     return 0;
 }
