@@ -17,22 +17,22 @@ auto time_ns(const Func &func) {
 void benchmark(const int &n) {
     using namespace std::chrono;
 
-    std::cout << "BENCHMARK" << std::endl;
+    std::cout << "\nBENCHMARK" << std::endl;
     std::cout << "matrix size (N x N) || classic multiplication (ns) || strassen algorithm (ns)" << std::endl;
 
-    for (int i = n; i >= 2; i -= 5) {
+    for (int i = n; i >= 2; i -= 2) {
         Matrix A(i, i), B(i, i);
         std::cout << i << "  x " << i << " || ";
 
-        std::cout << time_ns([&A, &B]() { matrixMultipty(A, B); }) << " || ";
+        std::cout << time_ns([&A, &B]() { matrixMultiplyRec(A, B); }) << " || ";
 
         std::cout << time_ns([&A, &B]() { strassenAlgorithm(A, B); }) << std::endl;
     }
 }
 
 int main() {
-    Matrix M1(20, 10);
-    Matrix M2(10, 20);
+    Matrix M1(3, 3);
+    Matrix M2(3, 3);
     M1.print();
     std::cout << std::endl;
     M2.print();
@@ -41,6 +41,9 @@ int main() {
     Matrix M3 = strassenAlgorithm(M1, M2);
     M3.print();
     std::cout << std::endl;
-//    benchmark(50);
+    Matrix M4 = matrixMultiplyRec(M1, M2);
+    M4.print();
+
+    benchmark(100);
     return 0;
 }
