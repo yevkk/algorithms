@@ -32,15 +32,15 @@ unsigned int *zFunction(const std::string &str) {
 }
 
 bool isCyclicOffset(const std::string &str1, const std::string &str2) {
-    std::string tmp = str1 + (char) CHAR_MAX + str2;
-    auto *z = zFunction("abaabbaba");
-    for (unsigned int i = 0; i < 9; i++)
-        std::cout << z[i] << " ";
-
-    return true;
+    std::string tmp = str1 + (char) CHAR_MAX + str2 + str2;
+    auto *z = zFunction(tmp);
+    for (unsigned int i = str1.size() + 1; i < tmp.size(); i++) {
+        if (z[i] == str2.size()) return true;
+    }
+    return false;
 }
 
 int main() {
-    isCyclicOffset("456", "123");
+    std::cout << std::boolalpha << isCyclicOffset("This is a sample text", "mple textThis is a sa");
     return 0;
 }
