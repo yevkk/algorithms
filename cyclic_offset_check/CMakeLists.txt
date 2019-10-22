@@ -3,4 +3,4 @@ project(cyclic_offset_check)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(cyclic_offset_check main.cpp)
+add_executable(cyclic_offset_check main.cpp tests.hpp cyclic_offset.hpp)
