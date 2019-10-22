@@ -20,30 +20,30 @@ void benchmark(const int &n) {
     std::cout << "\nBENCHMARK" << std::endl;
     std::cout << "matrix size (N x N) || classic multiplication (ns) || strassen algorithm (ns)" << std::endl;
 
-    for (int i = n; i >= 2; i -= 2) {
+    for (int i = n; i >= 2; i -= 10) {
         Matrix A(i, i), B(i, i);
         std::cout << i << "  x " << i << " || ";
 
-        std::cout << time_ns([&A, &B]() { matrixMultiplyRec(A, B); }) << " || ";
+        std::cout << time_ns([&A, &B]() { matrixMultiply(A, B); }) << " || ";
 
         std::cout << time_ns([&A, &B]() { strassenAlgorithm(A, B); }) << std::endl;
     }
 }
 
 int main() {
-    Matrix M1(3, 3);
-    Matrix M2(3, 3);
-    M1.print();
-    std::cout << std::endl;
-    M2.print();
-    std::cout << std::endl;
+//    Matrix M1(100, 100);
+//    Matrix M2(100, 100);
+//    M1.print();
+//    std::cout << std::endl;
+//    M2.print();
+//    std::cout << std::endl;
+//
+//    Matrix M3 = strassenAlgorithm(M1, M2);
+//    std::cout << std::boolalpha << (M3 == matrixMultiply(M1, M2)) << std::endl;
+//    M3.print();
 
-    Matrix M3 = strassenAlgorithm(M1, M2);
-    M3.print();
-    std::cout << std::endl;
-    Matrix M4 = matrixMultiplyRec(M1, M2);
-    M4.print();
 
-    benchmark(100);
+
+    benchmark(500);
     return 0;
 }

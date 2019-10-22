@@ -68,6 +68,18 @@ Matrix Matrix::operator-(const Matrix &M) const {
     return res;
 }
 
+bool Matrix::operator==(const Matrix &M) const {
+    if (this->rows != M.rows || this->columns != M.columns) return false;
+
+    for(int i = 0; i < this->rows; i++){
+        for(int j = 0; j < this->columns; j++){
+            if ((*this)(i, j) != M(i, j)) return false;
+        }
+    }
+
+    return true;
+}
+
 void Matrix::print() {
     for (int i = 0; i < rows; i++) {
         std::cout << i << ") ";
@@ -92,78 +104,8 @@ Matrix matrixMultiply(const Matrix &A, const Matrix &B) {
     return C;
 }
 
-Matrix matrixMultiplyRecStep(const Matrix &A, const Matrix &B, const int &size) {
-    if (size <= 2) return matrixMultiply(A, B);
-
-    Matrix A11(size / 2, size / 2, true);
-    Matrix A12(size / 2, size / 2, true);
-    Matrix A21(size / 2, size / 2, true);
-    Matrix A22(size / 2, size / 2, true);
-    Matrix B11(size / 2, size / 2, true);
-    Matrix B12(size / 2, size / 2, true);
-    Matrix B21(size / 2, size / 2, true);
-    Matrix B22(size / 2, size / 2, true);
-
-    for (int i = 0; i < size / 2; i++) {
-        for (int j = 0; j < size / 2; j++) {
-            A11(i, j) = A(i, j);
-            A12(i, j) = A(i, j + size / 2);
-            A21(i, j) = A(i + size / 2, j);
-            A22(i, j) = A(i + size / 2, j + size / 2);
-
-            B11(i, j) = B(i, j);
-            B12(i, j) = B(i, j + size / 2);
-            B21(i, j) = B(i + size / 2, j);
-            B22(i, j) = B(i + size / 2, j + size / 2);
-        }
-    }
-
-    Matrix C11 = matrixMultiplyRecStep(A11, B11, size / 2) + matrixMultiplyRecStep(A12, B21, size / 2);
-    Matrix C12 = matrixMultiplyRecStep(A11, B12, size / 2) + matrixMultiplyRecStep(A12, B22, size / 2);
-    Matrix C21 = matrixMultiplyRecStep(A21, B11, size / 2) + matrixMultiplyRecStep(A22, B21, size / 2);
-    Matrix C22 = matrixMultiplyRecStep(A21, B12, size / 2) + matrixMultiplyRecStep(A22, B22, size / 2);
-
-    Matrix C(size, size, true);
-
-    for (int i = 0; i < size / 2; i++) {
-        for (int j = 0; j < size / 2; j++) {
-            C(i, j) = C11(i, j);
-            C(i, j + size / 2) = C12(i, j);
-            C(i + size / 2, j) = C21(i, j);
-            C(i + size / 2, j + size / 2) = C22(i, j);
-        }
-    }
-
-    return C;
-}
-
-Matrix matrixMultiplyRec(const Matrix &A, const Matrix &B) {
-    if ((A.rows != B.columns) || (A.columns != B.rows))
-        return A;
-    int new_size = 1, curr_size = (A.rows < A.columns) ? A.columns : A.rows;
-    while (new_size < curr_size)
-        new_size *= 2;
-
-    Matrix new_A(new_size, new_size, true);
-    Matrix new_B(new_size, new_size, true);
-
-    for (int i = 0; i < A.rows; i++)
-        std::copy(A(i) + 0, A(i) + A.columns, new_A(i));
-
-    for (int i = 0; i < B.rows; i++)
-        std::copy(B(i) + 0, B(i) + B.columns, new_B(i));
-
-    Matrix res(A.rows, B.columns, true);
-    Matrix sub_res = matrixMultiplyRecStep(new_A, new_B, new_size);
-
-    for (int i = 0; i < A.rows; i++)
-        std::copy(sub_res(i) + 0, sub_res(i) + B.columns, res(i));
-
-    return res;
-}
-
 Matrix strassenAlgorithmStep(const Matrix &A, const Matrix &B, const int &size) {
-    if (size <= 2) return matrixMultiply(A, B);
+    if (size <= 64) return matrixMultiply(A, B);
 
     Matrix A11(size / 2, size / 2, true);
     Matrix A12(size / 2, size / 2, true);
@@ -175,33 +117,33 @@ Matrix strassenAlgorithmStep(const Matrix &A, const Matrix &B, const int &size) 
     Matrix B22(size / 2, size / 2, true);
 
     //copying with std::sort;
-//    for (int i = 0; i < size / 2; i++) {
-//        assert(A(i)!=nullptr);
-//        std::copy(A(i) + 0, A(i) + size / 2 + 1, A11(i));
-//        std::copy(A(i) + size / 2, A(i) + size + 1, A12(i));
-//        std::copy(A(i + size / 2), A(i + size / 2) + size / 2 + 1, A21(i));
-//        std::copy(A(i + size / 2) + size / 2, A(i + size / 2) + size + 1, A22(i));
-//
-//        std::copy(B(i) + 0, B(i) + size / 2 + 1, B11(i));
-//        std::copy(B(i) + size / 2, B(i) + size + 1, B12(i));
-//        std::copy(B(i + size / 2), B(i + size / 2) + size / 2 + 1, B21(i));
-//        std::copy(B(i + size / 2) + size / 2, B(i + size / 2) + size + 1, B22(i));
-//    }
+    for (int i = 0; i < size / 2; i++) {
+        assert(A(i) != nullptr);
+        std::copy(A(i) + 0, A(i) + size / 2 + 1, A11(i));
+        std::copy(A(i) + size / 2, A(i) + size + 1, A12(i));
+        std::copy(A(i + size / 2), A(i + size / 2) + size / 2 + 1, A21(i));
+        std::copy(A(i + size / 2) + size / 2, A(i + size / 2) + size + 1, A22(i));
+
+        std::copy(B(i) + 0, B(i) + size / 2 + 1, B11(i));
+        std::copy(B(i) + size / 2, B(i) + size + 1, B12(i));
+        std::copy(B(i + size / 2), B(i + size / 2) + size / 2 + 1, B21(i));
+        std::copy(B(i + size / 2) + size / 2, B(i + size / 2) + size + 1, B22(i));
+    }
 
     //copying by single elements;
-    for (int i = 0; i < size / 2; i++) {
-        for (int j = 0; j < size / 2; j++) {
-            A11(i, j) = A(i, j);
-            A12(i, j) = A(i, j + size / 2);
-            A21(i, j) = A(i + size / 2, j);
-            A22(i, j) = A(i + size / 2, j + size / 2);
-
-            B11(i, j) = B(i, j);
-            B12(i, j) = B(i, j + size / 2);
-            B21(i, j) = B(i + size / 2, j);
-            B22(i, j) = B(i + size / 2, j + size / 2);
-        }
-    }
+//    for (int i = 0; i < size / 2; i++) {
+//        for (int j = 0; j < size / 2; j++) {
+//            A11(i, j) = A(i, j);
+//            A12(i, j) = A(i, j + size / 2);
+//            A21(i, j) = A(i + size / 2, j);
+//            A22(i, j) = A(i + size / 2, j + size / 2);
+//
+//            B11(i, j) = B(i, j);
+//            B12(i, j) = B(i, j + size / 2);
+//            B21(i, j) = B(i + size / 2, j);
+//            B22(i, j) = B(i + size / 2, j + size / 2);
+//        }
+//    }
 
     Matrix P = strassenAlgorithmStep(A11 + A22, B11 + B22, size / 2);
     Matrix Q = strassenAlgorithmStep(A21 + A22, B11, size / 2);
@@ -219,22 +161,22 @@ Matrix strassenAlgorithmStep(const Matrix &A, const Matrix &B, const int &size) 
     Matrix C(size, size, true);
 
     //copying with std::sort;
-//    for (int i = 0; i < size / 2; i++) {
-//        std::copy(C11(i) + 0, C11(i) + size / 2 + 1, C(i));
-//        std::copy(C12(i) + 0, C12(i) + size / 2 + 1, C(i) + size / 2);
-//        std::copy(C21(i) + 0, C21(i) + size / 2 + 1, C(i + size / 2));
-//        std::copy(C22(i) + 0, C22(i) + size / 2 + 1, C(i + size / 2) + size / 2);
-//    }
+    for (int i = 0; i < size / 2; i++) {
+        std::copy(A11(i) + 0, A11(i) + size / 2 + 1, C(i));
+        std::copy(A12(i) + 0, A12(i) + size / 2 + 1, C(i) + size / 2);
+        std::copy(A21(i) + 0, A21(i) + size / 2 + 1, C(i + size / 2));
+        std::copy(A22(i) + 0, A22(i) + size / 2 + 1, C(i + size / 2) + size / 2);
+    }
 
     //copying by single elements;
-    for (int i = 0; i < size / 2; i++) {
-        for (int j = 0; j < size / 2; j++) {
-            C(i, j) = A11(i, j);
-            C(i, j + size / 2) = A12(i, j);
-            C(i + size / 2, j) = A21(i, j);
-            C(i + size / 2, j + size / 2) = A22(i, j);
-        }
-    }
+//    for (int i = 0; i < size / 2; i++) {
+//        for (int j = 0; j < size / 2; j++) {
+//            C(i, j) = A11(i, j);
+//            C(i, j + size / 2) = A12(i, j);
+//            C(i + size / 2, j) = A21(i, j);
+//            C(i + size / 2, j + size / 2) = A22(i, j);
+//        }
+//    }
 
     return C;
 }
@@ -260,6 +202,7 @@ Matrix strassenAlgorithm(const Matrix &A, const Matrix &B) {
 
     for (int i = 0; i < A.rows; i++)
         std::copy(sub_res(i) + 0, sub_res(i) + B.columns, res(i));
+
 
     return res;
 }

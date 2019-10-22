@@ -5,5 +5,5 @@ set(CMAKE_CXX_STANDARD 14)
 
 add_executable(strassen_algorithm main.cpp matrix.cpp matrix.hpp)
 
-set(CMAKE_BUILD_TYPE Release)
-target_compile_options(strassen_algorithm PRIVATE -O3)
+#set(CMAKE_BUILD_TYPE Release)
+#target_compile_options(strassen_algorithm PRIVATE -O3)

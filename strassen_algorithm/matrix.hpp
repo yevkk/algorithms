@@ -26,14 +26,12 @@ public:
 
     Matrix operator-(const Matrix &M) const;
 
+    bool operator==(const Matrix &M) const;
+
     void print();
 };
 
 Matrix matrixMultiply(const Matrix &A, const Matrix &B);
-
-Matrix matrixMultiplyRecStep(const Matrix &A, const Matrix &B, const int &size);
-
-Matrix matrixMultiplyRec(const Matrix &A, const Matrix &B);
 
 Matrix strassenAlgorithmStep(const Matrix &A, const Matrix &B, const int &size);
 
