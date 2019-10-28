@@ -4,4 +4,8 @@
 
 int hash(char num);
 
-int rabin_karp_extended(Matrix<char> M, Matrix<char> P);
+template <typename T>
+
+int rabin_karp_extended(Matrix<T> M, Matrix<T> P);
+
+#include "rabin_karp_extended.hxx"

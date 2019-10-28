@@ -12,10 +12,10 @@ public:
     int size;
 
     explicit Matrix(const int &Size){
-        _elements = new char *[Size];
+        _elements = new T *[Size];
         for (int i = 0; i < Size; i++) {
-            _elements[i] = new char[Size];
-            for (int j = 0; j < size; j++)
+            _elements[i] = new T[Size];
+            for (int j = 0; j < Size; j++)
                 _elements[i][j] = 0;
         }
         size = Size;

@@ -3,4 +3,4 @@ project(rabin_karp)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(rabin_karp main.cpp rabin_karp_extended.cpp rabin_karp_extended.hpp matrix.hpp)
+add_executable(rabin_karp main.cpp rabin_karp_extended.hpp matrix.hpp rabin_karp_extended.hxx)
