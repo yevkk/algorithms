@@ -11,7 +11,7 @@ private:
 public:
     int size;
 
-    Matrix(const int &Size){
+    explicit Matrix(const int &Size){
         _elements = new char *[Size];
         for (int i = 0; i < Size; i++) {
             _elements[i] = new char[Size];
