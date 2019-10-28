@@ -37,9 +37,10 @@ bool isCyclicOffset(const std::string &str1, const std::string &str2) {
     if (str1.size() != str2.size()) return false;
     if (str1.empty() && str2.empty()) return true;
     std::string tmp = str1 + (char) CHAR_MAX + str2 + str2;
-    auto *z = zFunction(tmp);
+    auto z = zFunction(tmp);
     for (unsigned int i = str1.size() + 1; i < tmp.size(); i++) {
         if (z[i] == str2.size()) return true;
     }
+
     return false;
 }
