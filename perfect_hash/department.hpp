@@ -46,7 +46,7 @@ std::vector<Student *> getStudentsFromDB(const char *dbFileName) {
             int group;
             strGroup >> group;
 
-            std::cout << name << "  " << group << std::endl;
+            //std::cout << name << "  " << group << std::endl;
 
             res.emplace_back(new Student(name, group));
             sqlite3_step(group_stmt);
