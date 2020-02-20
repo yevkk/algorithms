@@ -2,6 +2,6 @@
 #include <iostream>
 
 int main() {
-    auto dpr = new Department("department.db");
+    auto elements = getStudentsFromDB("../../department.db");
     return 0;
 }
