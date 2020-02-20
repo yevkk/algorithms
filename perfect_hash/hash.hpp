@@ -23,8 +23,12 @@ int hashString(const std::string &str, int p) {
     return h;
 }
 
-int hashFunction(int num, int a, int b, int m, int p) {
-    return (((a * num + b) % p) % m);
+int hashStudent(std::string name, int a, int b, int m, int p) {
+    int h = 0;
+    for (int i = 0; i < name.size(); i++) {
+        h = (h + b + a * name[i]) % p;
+    }
+    return h % m;
 }
 
 class HashNode {
@@ -59,7 +63,7 @@ public:
 
             flag = true;
             for (auto &student: tmp) {
-                int index = hashFunction(hashString(student->getFullName(), p), a, b, m, p);
+                int index = hashStudent(student->getFullName(), a, b, m, p);
                 std::cout << index << std::endl;
                 if (elements[index] != nullptr) {
                     flag = false;
@@ -72,9 +76,9 @@ public:
 
     }
 
-    Student *getStudent(const std::string &str, int p) {
-        return elements[hashFunction(hashString(str, p), a, b, m, p)];
-    }
+//    Student *getStudent(const std::string &str, int p) {
+//        return elements[hashFunction(hashString(str, p), a, b, m, p)];
+//    }
 };
 
 class HashTable {
@@ -94,7 +98,7 @@ public:
         b = rand_int(0, 100);
 
         for (auto &e:elements) {
-            data[hashFunction(hashString(e->getFullName(), p), a, b, m, p)].tmp.push_back(e);
+            data[hashStudent(e->getFullName(), a, b, m, p)].tmp.push_back(e);
         }
 
         for (auto &node:data) {
@@ -102,9 +106,9 @@ public:
         }
     }
 
-    Student *getStudent(const std::string &str) {
-        return data[hashFunction(hashString(str, p), a, b, m, p)].getStudent(str, p);
-    }
+//    Student *getStudent(const std::string &str) {
+//        return data[hashFunction(hashString(str, p), a, b, m, p)].getStudent(str, p);
+//    }
 };
 
 
