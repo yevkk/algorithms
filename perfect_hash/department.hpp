@@ -1,8 +1,12 @@
 #ifndef PERFECT_HASH_DEPARTMENT_HPP
 #define PERFECT_HASH_DEPARTMENT_HPP
 
+#include "sqlite3.h"
+
 #include <string>
 #include <vector>
+#include <iostream>
+#include <sstream>
 
 class Student {
 private:
@@ -58,6 +62,34 @@ public:
 
     explicit Department(const std::vector<Group *> groupsArg) :
             groups(groupsArg) {};
+
+    explicit Department(const char *dbFilename) {
+        sqlite3 *db;
+        sqlite3_stmt *stmt;
+
+        if (sqlite3_open("../../department.db", &db) == SQLITE_OK) {
+            sqlite3_prepare(db, "SELECT * from Groups;", -1, &stmt, nullptr);//preparing the statement
+            sqlite3_step(stmt);
+            while (sqlite3_column_text(stmt, 0)) {
+                std::stringstream strValueID;
+                strValueID << sqlite3_column_text(stmt, 0);
+
+                int intValueID;
+                strValueID >> intValueID;
+
+                int id = intValueID;
+
+                std::string name = std::string(reinterpret_cast<const char *>(
+                                                       sqlite3_column_text(stmt, 1)
+                                               ));
+
+                std::cout << name << std::endl;
+                sqlite3_step(stmt);
+            }
+        } else {
+            std::cout << "boooo";
+        }
+    }
 };
 
 #endif //PERFECT_HASH_DEPARTMENT_HPP

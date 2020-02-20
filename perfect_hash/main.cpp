@@ -1,6 +1,7 @@
+#include "department.hpp"
 #include <iostream>
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    auto dpr = new Department("department.db");
     return 0;
 }
