@@ -5,5 +5,6 @@
 int main() {
     auto elements = getStudentsFromDB("../../department.db");
     HashTable hash(elements);
+
     return 0;
 }

@@ -5,6 +5,7 @@
 #include <vector>
 #include <random>
 #include <ctime>
+#include <conio.h>
 
 int rand_int(int min, int max) {
     static std::random_device rd;
@@ -26,7 +27,8 @@ int hashString(const std::string &str, int p) {
 int hashStudent(std::string name, int a, int b, int m, int p) {
     int h = 0;
     for (int i = 0; i < name.size(); i++) {
-        h = (h + b + a * name[i]) % p;
+        h = (b + a * (h + (int) name[i])) % p;
+        std::cout << h << " (" << (int) name[i] << ")  ";
     }
     return h % m;
 }
@@ -46,7 +48,7 @@ public:
 
     void fill(int p) {
         m = (int) (tmp.size() * tmp.size());
-        std::cout << tmp.size()  << std::endl << std::endl;
+        std::cout << "MJ: " << tmp.size() << std::endl << std::endl;
 
         if (m == 1) {
             elements = tmp;
@@ -58,14 +60,16 @@ public:
         while (!flag) {
             elements.clear();
             elements = std::vector<Student *>(m, nullptr);
-            a = rand_int(0, 100);
-            b = rand_int(0, 100);
+            a = rand_int(1, p - 1);
+            b = rand_int(0, p - 1);
 
             flag = true;
             for (auto &student: tmp) {
                 int index = hashStudent(student->getFullName(), a, b, m, p);
                 std::cout << index << std::endl;
                 if (elements[index] != nullptr) {
+//                    std::cout << "ERROR::" << index << "  " << student->getFullName() << "  "
+//                              << elements[index]->getFullName() << "  " << a << "  " << b << std::endl;
                     flag = false;
                     break;
                 }
@@ -76,13 +80,14 @@ public:
 
     }
 
-//    Student *getStudent(const std::string &str, int p) {
-//        return elements[hashFunction(hashString(str, p), a, b, m, p)];
-//    }
+    Student *getStudent(const std::string &str, int p) {
+        return elements[hashStudent(str, a, b, m, p)];
+    }
 };
 
 class HashTable {
 public:
+
     std::vector<HashNode> data;
     int p;
     int m;
@@ -90,12 +95,12 @@ public:
     int b;
 
     HashTable(std::vector<Student *> elements) {
-        p = 101;
-        m = 37;
+        p = 2153;
+        m = 50;
         data = std::vector<HashNode>(m);
 
-        a = rand_int(1, 100);
-        b = rand_int(0, 100);
+        a = rand_int(1, p - 1);
+        b = rand_int(0, p - 1);
 
         for (auto &e:elements) {
             data[hashStudent(e->getFullName(), a, b, m, p)].tmp.push_back(e);
@@ -106,9 +111,9 @@ public:
         }
     }
 
-//    Student *getStudent(const std::string &str) {
-//        return data[hashFunction(hashString(str, p), a, b, m, p)].getStudent(str, p);
-//    }
+    Student *getStudent(const std::string &str) {
+        return data[hashStudent(str, a, b, m, p)].getStudent(str, p);
+    }
 };
 
 
