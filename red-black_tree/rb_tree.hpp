@@ -35,6 +35,25 @@ public:
         x->parent = y;
     }
 
+    void RightRotate(RBNode<DataType> *x) {
+        RBNode<DataType> *y = x->left;
+        x->left = y->right;
+
+        if (y->right != _nullNode) {
+            y->right->parent = x;
+        }
+        y->parent = x->parent;
+        if (x->parent == _nullNode) {
+            _root = y;
+        } else if (x == x->parent->left) {
+            x->parent->left = y;
+        } else {
+            x->parent->right = y;
+        }
+        y->right = x;
+        x->parent = y;
+    }
+
     void RBInsert(RBNode<DataType> *node) {
 
     }
