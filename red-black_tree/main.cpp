@@ -1,6 +1,8 @@
+#include "department.hpp"
+
 #include <iostream>
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    //auto students = getStudentsFromDB("../../department.db");
     return 0;
 }
