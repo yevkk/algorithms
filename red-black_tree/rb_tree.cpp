@@ -23,6 +23,34 @@ void RBTree::print() {
     printNode(_root, 0);
 }
 
+RBNode *RBTree::min(RBNode *root) {
+    RBNode *ptr = root;
+    while (ptr->left != _nullNode) {
+        ptr = ptr->left;
+    }
+    return ptr;
+}
+
+RBNode *RBTree::max(RBNode *root) {
+    RBNode *ptr = root;
+    while (ptr->right != _nullNode) {
+        ptr = ptr->right;
+    }
+    return ptr;
+}
+
+RBNode *RBTree::successor(RBNode *node) {
+    if (node->right != _nullNode) {
+        return min(node->right);
+    }
+    RBNode *ptr = node->parent;
+    while ((ptr != _nullNode) && (node == ptr->right)) {
+        node = ptr;
+        ptr = ptr->parent;
+    }
+    return ptr;
+}
+
 void RBTree::leftRotate(RBNode *x) {
     RBNode *y = x->right;
     x->right = y->left;

@@ -17,6 +17,12 @@ public:
 
     void print();
 
+    RBNode *min(RBNode *root);
+
+    RBNode *max(RBNode *root);
+
+    RBNode *successor(RBNode *root);
+
     void leftRotate(RBNode *x);
 
     void rightRotate(RBNode *x);
