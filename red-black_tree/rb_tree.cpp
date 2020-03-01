@@ -10,16 +10,12 @@ RBTree::RBTree() {
 void RBTree::printNode(RBNode *node, int level) {
     if (node == _nullNode) return;
 
+    std::cout << '|';
     for (int i = 0; i < level; i++) {
-        std::cout << '\t';
+        std::cout << '\t' << '|';
     }
-    std::cout << "| " << *node->data() << "   (" << node->color() << ")" << std::endl;
-    for (int i = 0; i < level; i++) {
-        std::cout << '\t';
-    }
-    std::cout << "L:" << std::endl;
+    std::cout << *(node->data()) << "   (" << node->color() << ")" << std::endl;
     printNode(node->left, level + 1);
-    std::cout << "R:" << std::endl;
     printNode(node->right, level + 1);
 }
 
@@ -70,7 +66,7 @@ void RBTree::insert(RBNode *node) {
     auto x = _root;
     while (x != _nullNode) {
         y = x;
-        if (node->data() < x->data()) {
+        if (*(node->data()) < *(x->data())) {
             x = x->left;
         } else {
             x = x->right;
@@ -79,7 +75,7 @@ void RBTree::insert(RBNode *node) {
     node->parent = y;
     if (y == _nullNode) {
         _root = node;
-    } else if (node->data() < y->data()) {
+    } else if (*(node->data()) < *(y->data())) {
         y->left = node;
     } else {
         y->right = node;
