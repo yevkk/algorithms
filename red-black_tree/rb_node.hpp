@@ -7,23 +7,18 @@ template <typename DataType>
 class RBNode {
 private:
     COLOR _color;
-    RBNode* _parent;
-    RBNode* _left;
-    RBNode* _right;
     DataType* _data;
 public:
-    RBNode (DataType* data, RBNode* parent, RBNode* left, RBNode* right, COLOR color = RED):
-    _data(data),
-    _parent(parent),
-    _left(left),
-    _right(right),
-    _color(color) {};
+    RBNode* parent;
+    RBNode* left;
+    RBNode* right;
 
-    static RBNode* createNullNode() {
-        auto ptr = new RBNode(nullptr, nullptr, nullptr, nullptr, BLACK);
-        ptr->_parent = ptr->_left = ptr->_right = ptr;
-        return ptr;
-    }
+    RBNode (DataType* data, RBNode* parentArg, RBNode* leftArg, RBNode* rightArg, COLOR color = RED):
+    _data(data),
+    parent(parentArg),
+    left(leftArg),
+    right(rightArg),
+    _color(color) {};
 
     void switchColor() {
         if (_color == BLACK) {
@@ -39,18 +34,6 @@ public:
 
     COLOR color() {
         return _color;
-    };
-
-    RBNode* parent() {
-        return _parent;
-    };
-
-    RBNode* left() {
-        return _left;
-    };
-
-    RBNode* right() {
-        return _right;
     };
 
     DataType* data() {
