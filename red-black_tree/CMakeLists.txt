@@ -3,4 +3,4 @@ project(red_black_tree)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(red_black_tree main.cpp)
+add_executable(red_black_tree sqlite3.h sqlite3.h main.cpp)
