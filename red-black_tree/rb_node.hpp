@@ -19,8 +19,9 @@ public:
     _right(right),
     _color(color) {};
 
-    static RBNode* nullNode () {
-        static RBNode* ptr = new RBNode(nullptr, ptr, ptr, ptr, BLACK);
+    static RBNode* createNullNode() {
+        auto ptr = new RBNode(nullptr, nullptr, nullptr, nullptr, BLACK);
+        ptr->_parent = ptr->_left = ptr->_right = ptr;
         return ptr;
     }
 
