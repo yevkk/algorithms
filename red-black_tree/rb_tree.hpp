@@ -21,7 +21,11 @@ public:
 
     RBNode *max(RBNode *root);
 
-    RBNode *successor(RBNode *root);
+    RBNode *successor(RBNode *node);
+
+    RBNode *predecessor(RBNode *node);
+
+    RBNode *search(RBNode *root, Student key);
 
     void leftRotate(RBNode *x);
 

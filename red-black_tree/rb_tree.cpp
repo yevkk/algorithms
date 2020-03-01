@@ -51,6 +51,29 @@ RBNode *RBTree::successor(RBNode *node) {
     return ptr;
 }
 
+RBNode *RBTree::predecessor(RBNode *node) {
+    if (node->left != _nullNode) {
+        return max(node->right);
+    }
+    RBNode *ptr = node->parent;
+    while ((ptr != _nullNode) && (node == ptr->left)) {
+        node = ptr;
+        ptr = ptr->parent;
+    }
+    return ptr;
+}
+
+RBNode *RBTree::search(RBNode *root, Student key) {
+    if ((root == _nullNode) || (key == *(root->data()))) {
+        return root;
+    }
+    if (key < *(root->data())) {
+        return search(root->left, key);
+    } else {
+        return search(root->right, key);
+    }
+}
+
 void RBTree::leftRotate(RBNode *x) {
     RBNode *y = x->right;
     x->right = y->left;
