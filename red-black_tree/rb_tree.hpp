@@ -9,6 +9,11 @@ class RBTree {
 private:
     RBNode<DataType> *_root;
     RBNode<DataType> *_nullNode;
+
+    void RBInsertFixup(RBNode<DataType> *x) {
+
+    }
+
 public:
     RBTree() {
         _root = nullptr;
@@ -54,8 +59,28 @@ public:
         x->parent = y;
     }
 
-    void RBInsert(RBNode<DataType> *node) {
 
+    void RBInsert(RBNode<DataType> *node) {
+        RBNode<DataType> *y = _nullNode, *x = _root;
+        while (x != _nullNode) {
+            y = x;
+            if (node->data() < x->data()) {
+                x = x->left;
+            } else {
+                x = x->right;
+            }
+        }
+        node->parent = y;
+        if (y == _nullNode) {
+            _root = node;
+        } else if (node->data() < y->data()) {
+            y->left = node;
+        } else {
+            y->right = node;
+        }
+        node->left = node->right = _nullNode;
+        node->setColor(RED);
+        RBInsertFixup(node);
     }
 };
 
