@@ -32,7 +32,7 @@ public:
     }
 };
 
-std::vector<Student *> getStudentsFromDB(const char *dbFileName) {
+inline std::vector<Student *> getStudentsFromDB(const char *dbFileName) {
     std::vector<Student *> res;
     sqlite3 *db;
 
@@ -68,28 +68,28 @@ std::vector<Student *> getStudentsFromDB(const char *dbFileName) {
     return res;
 }
 
-std::ostream& operator<<(std::ostream &os, Student &student) {
+inline std::ostream& operator<<(std::ostream &os, Student &student) {
     os << student.getFullName() << ",  AvPoint:" << student.getAveragePoint();
     return os;
 }
 
-bool operator<(Student &studentL, Student &studentR) {
+inline bool operator<(Student &studentL, Student &studentR) {
     return studentL.getAveragePoint() < studentR.getAveragePoint();
 }
 
-bool operator>(Student &studentL, Student &studentR) {
+inline bool operator>(Student &studentL, Student &studentR) {
     return !(studentL < studentR);
 }
 
-bool operator==(Student &studentL, Student &studentR) {
+inline bool operator==(Student &studentL, Student &studentR) {
     return (!(studentL < studentR)) && (!(studentL > studentR));
 }
 
-bool operator>=(Student &studentL, Student &studentR) {
+inline bool operator>=(Student &studentL, Student &studentR) {
     return !(studentL < studentR);
 }
 
-bool operator<=(Student &studentL, Student &studentR) {
+inline bool operator<=(Student &studentL, Student &studentR) {
     return !(studentL > studentR);
 }
 

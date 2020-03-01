@@ -8,8 +8,8 @@ int main() {
     auto tree = new RBTree();
     for (auto &e:students) {
         auto node = new RBNode(e);
-//        tree->insert(node);
+        tree->insert(node);
     }
-    //tree->print();
+    tree->print();
     return 0;
 }

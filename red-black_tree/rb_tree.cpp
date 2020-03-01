@@ -13,7 +13,7 @@ void RBTree::printNode(RBNode *node, int level) {
     for (int i = 0; i < level; i++) {
         std::cout << '\t';
     }
-    std::cout << "| " << node->data() << "   (" << node->color() << ")" << std::endl;
+    std::cout << "| " << *node->data() << "   (" << node->color() << ")" << std::endl;
     for (int i = 0; i < level; i++) {
         std::cout << '\t';
     }
