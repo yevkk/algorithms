@@ -10,6 +10,10 @@ private:
 
     void insertFixup(RBNode *node);
 
+    void deleteFixup(RBNode *node);
+
+    void transplant(RBNode *dst, RBNode *src);
+
     void printNode(RBNode *node, int level);
 
 public:
@@ -31,7 +35,9 @@ public:
 
     void rightRotate(RBNode *x);
 
-    void insert(RBNode *node);
+    void insertNode(RBNode *node);
+
+    void deleteNode(RBNode *node);
 };
 
 #endif //RED_BLACK_TREE_RB_TREE_HPP

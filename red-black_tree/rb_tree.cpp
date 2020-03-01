@@ -23,6 +23,19 @@ void RBTree::print() {
     printNode(_root, 0);
 }
 
+void RBTree::transplant(RBNode *dst, RBNode *src) {
+    if (dst->parent == _nullNode) {
+        _root = src;
+    } else if (dst == dst->parent->left) {
+        dst->parent->left = src;
+    } else {
+        dst->parent->right = src;
+    }
+    if (src != _nullNode) {
+        src->parent = dst->parent;
+    }
+}
+
 RBNode *RBTree::min(RBNode *root) {
     RBNode *ptr = root;
     while (ptr->left != _nullNode) {
@@ -112,7 +125,7 @@ void RBTree::rightRotate(RBNode *x) {
     x->parent = y;
 }
 
-void RBTree::insert(RBNode *node) {
+void RBTree::insertNode(RBNode *node) {
     auto y = _nullNode;
     auto x = _root;
     while (x != _nullNode) {

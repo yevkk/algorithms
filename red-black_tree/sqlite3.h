@@ -1589,7 +1589,7 @@ SQLITE_API int sqlite3_extended_result_codes(sqlite3*, int onoff);
 ** function is running and thus changes the last insert [rowid],
 ** then the value returned by [sqlite3_last_insert_rowid()] is
 ** unpredictable and might not equal either the old or the new
-** last insert [rowid].
+** last insertNode [rowid].
 */
 SQLITE_API sqlite3_int64 sqlite3_last_insert_rowid(sqlite3*);
 
