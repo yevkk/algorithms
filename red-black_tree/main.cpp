@@ -11,5 +11,6 @@ int main() {
         tree->insertNode(node);
     }
     tree->print();
+
     return 0;
 }

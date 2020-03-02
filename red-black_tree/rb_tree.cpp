@@ -7,6 +7,14 @@ RBTree::RBTree() {
     _root = _nullNode;
 }
 
+RBNode *RBTree::nil() {
+    return _nullNode;
+}
+
+RBNode *RBTree::root() {
+    return _root;
+}
+
 void RBTree::printNode(RBNode *node, int level) {
     if (node == _nullNode) return;
 
@@ -186,4 +194,92 @@ void RBTree::insertFixup(RBNode *node) {
         }
     }
     _root->setColor(BLACK);
+}
+
+void RBTree::deleteNode(RBNode *node) {
+    RBNode *y = node;
+    RBNode *x;
+    COLOR yInitColor = y->color();
+    if (node->left == _nullNode) {
+        x = node->right;
+        transplant(node, node->right);
+    } else if (node->right == _nullNode) {
+        x = node->left;
+        transplant(node, node->left);
+    } else {
+        y = min(node->right);
+        yInitColor = y->color();
+        x = y->right;
+        if (y->parent == node) {
+            x->parent = y;
+        } else {
+            transplant(y, y->right);
+            y->right = node->right;
+            y->right->parent = y;
+        }
+        transplant(node, y);
+        y->left = node->left;
+        y->left->parent = y;
+        y->setColor(node->color());
+    }
+    delete node;
+
+    if (yInitColor == BLACK) {
+        deleteFixup(x);
+    }
+}
+
+void RBTree::deleteFixup(RBNode *node) {
+    while ((node != _root) && (node->color() == BLACK)) {
+        if (node == node->parent->left) {
+            RBNode *w = node->parent->right;
+            if (w->color() == RED) {
+                w->setColor(BLACK);
+                node->parent->setColor(RED);
+                leftRotate(node->parent);
+                w = node->parent->right;
+            }
+            if (w->left->color() == BLACK && w->right->color() == BLACK) {
+                w->setColor(RED);
+                node = node->parent;
+            } else {
+                if (w->right->color() == BLACK) {
+                    w->left->setColor(BLACK);
+                    w->setColor(RED);
+                    rightRotate(w);
+                    w = node->parent->right;
+                }
+                w->setColor(node->parent->color());
+                node->parent->setColor(BLACK);
+                w->right->setColor(BLACK);
+                leftRotate(node->parent);
+                node = _root;;
+            };
+        } else {
+            RBNode *w = node->parent->left;
+            if (w->color() == RED) {
+                w->setColor(BLACK);
+                node->parent->setColor(RED);
+                rightRotate(node->parent);
+                w = node->parent->left;
+            }
+            if (w->right->color() == BLACK && w->left->color() == BLACK) {
+                w->setColor(RED);
+                node = node->parent;
+            } else {
+                if (w->left->color() == BLACK) {
+                    w->right->setColor(BLACK);
+                    w->setColor(RED);
+                    leftRotate(w);
+                    w = node->parent->left;
+                }
+                w->setColor(node->parent->color());
+                node->parent->setColor(BLACK);
+                w->left->setColor(BLACK);
+                rightRotate(node->parent);
+                node = _root;;
+            };
+        }
+    }
+    node->setColor(BLACK);
 }

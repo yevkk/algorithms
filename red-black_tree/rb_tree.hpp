@@ -21,6 +21,10 @@ public:
 
     void print();
 
+    RBNode *nil();
+
+    RBNode *root();
+
     RBNode *min(RBNode *root);
 
     RBNode *max(RBNode *root);
