@@ -14,7 +14,9 @@ private:
 
     void transplant(RBNode *dst, RBNode *src);
 
-    void printNode(RBNode *node, int level);
+    void printStep(RBNode *node, int level);
+
+    RBNode *osSelectStep(RBNode *node, int index);
 
 public:
     RBTree();
@@ -42,6 +44,10 @@ public:
     void insertNode(RBNode *node);
 
     void deleteNode(RBNode *node);
+
+    RBNode *osSelect(int index);
+
+    int osRank(RBNode *node);
 };
 
 #endif //RED_BLACK_TREE_RB_TREE_HPP

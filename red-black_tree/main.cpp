@@ -10,7 +10,22 @@ int main() {
         auto node = new RBNode(e);
         tree->insertNode(node);
     }
+
     tree->print();
+    std::cout << std::endl << std::endl;
+
+    for (int i = 1; i <= 50; i++) {
+        std::cout << *(tree->osSelect(i)->data()) << std::endl;
+    }
+    std::cout << std::endl << std::endl;
+
+    for (int i = 1; i <= 40; i++) {
+        tree->deleteNode(tree->root());
+    }
+
+    tree->print();
+    std::cout << std::endl << std::endl;
+
 
     return 0;
 }

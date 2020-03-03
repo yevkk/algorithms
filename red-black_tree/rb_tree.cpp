@@ -4,6 +4,7 @@ RBTree::RBTree() {
     _nullNode = new RBNode(nullptr);
     _nullNode->parent = _nullNode->left = _nullNode->right = _nullNode;
     _nullNode->setColor(BLACK);
+    _nullNode->size = 0;
     _root = _nullNode;
 }
 
@@ -15,20 +16,21 @@ RBNode *RBTree::root() {
     return _root;
 }
 
-void RBTree::printNode(RBNode *node, int level) {
+void RBTree::printStep(RBNode *node, int level) {
     if (node == _nullNode) return;
 
     std::cout << '|';
     for (int i = 0; i < level; i++) {
         std::cout << '\t' << '|';
     }
-    std::cout << *(node->data()) << "   (" << node->color() << ")" << std::endl;
-    printNode(node->left, level + 1);
-    printNode(node->right, level + 1);
+    std::cout << osRank(node) << "| ";
+    std::cout << *(node->data()) << "   (c:" << node->color() << ", s:" << node->size << ")" << std::endl;
+    printStep(node->left, level + 1);
+    printStep(node->right, level + 1);
 }
 
 void RBTree::print() {
-    printNode(_root, 0);
+    printStep(_root, 0);
 }
 
 void RBTree::transplant(RBNode *dst, RBNode *src) {
@@ -112,6 +114,8 @@ void RBTree::leftRotate(RBNode *x) {
     }
     y->left = x;
     x->parent = y;
+    y->size = x->size;
+    x->size = x->left->size + x->right->size + 1;
 }
 
 void RBTree::rightRotate(RBNode *x) {
@@ -131,6 +135,8 @@ void RBTree::rightRotate(RBNode *x) {
     }
     y->right = x;
     x->parent = y;
+    y->size = x->size;
+    x->size = x->left->size + x->right->size + 1;
 }
 
 void RBTree::insertNode(RBNode *node) {
@@ -138,6 +144,7 @@ void RBTree::insertNode(RBNode *node) {
     auto x = _root;
     while (x != _nullNode) {
         y = x;
+        x->size++;
         if (*(node->data()) < *(x->data())) {
             x = x->left;
         } else {
@@ -199,6 +206,13 @@ void RBTree::insertFixup(RBNode *node) {
 void RBTree::deleteNode(RBNode *node) {
     RBNode *y = node;
     RBNode *x;
+
+    RBNode *tmp = node;
+    while (tmp != _nullNode) {
+        tmp->size--;
+        tmp = tmp->parent;
+    }
+
     COLOR yInitColor = y->color();
     if (node->left == _nullNode) {
         x = node->right;
@@ -221,6 +235,7 @@ void RBTree::deleteNode(RBNode *node) {
         y->left = node->left;
         y->left->parent = y;
         y->setColor(node->color());
+        y->size = node->size;
     }
     delete node;
 
@@ -282,4 +297,32 @@ void RBTree::deleteFixup(RBNode *node) {
         }
     }
     node->setColor(BLACK);
+}
+
+RBNode *RBTree::osSelectStep(RBNode *root, int index) {
+    int r = root->left->size + 1;
+    if (index == r) {
+        return root;
+    } else if (index < r) {
+        return osSelectStep(root->left, index);
+    } else {
+        return osSelectStep(root->right, index - r);
+    }
+}
+
+RBNode *RBTree::osSelect(int index) {
+    RBNode *res = osSelectStep(_root, index);
+    return (res == _nullNode) ? nullptr : res;
+}
+
+int RBTree::osRank(RBNode *node) {
+    int r = node->left->size + 1;
+    RBNode *ptr = node;
+    while (ptr != _root) {
+        if (ptr == ptr->parent->right) {
+            r += ptr->parent->left->size + 1;
+        }
+        ptr = ptr->parent;
+    }
+    return r;
 }

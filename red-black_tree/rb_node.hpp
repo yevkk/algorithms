@@ -15,13 +15,15 @@ public:
     RBNode *parent;
     RBNode *left;
     RBNode *right;
+    int size;
 
     explicit RBNode(Student *data) :
             _data(data),
             parent(nullptr),
             left(nullptr),
             right(nullptr),
-            _color(RED) {};
+            _color(RED),
+            size(1) {};
 
     void switchColor() {
         if (_color == BLACK) {
@@ -39,7 +41,7 @@ public:
         return _color;
     };
 
-    Student* data() {
+    Student *data() {
         return _data;
     };
 };
