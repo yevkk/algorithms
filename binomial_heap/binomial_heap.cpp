@@ -7,6 +7,22 @@ BinomialHeap::BinomialHeap(BinomialNode *head) {
     _head = head;
 }
 
+void BinomialHeap::printStep(BinomialNode *node, int level) {
+    if (node == nullptr) return;
+
+    std::cout << '|';
+    for (int i = 0; i < level; i++) {
+        std::cout << '\t' << '|';
+    }
+    std::cout << *(node->data()) << std::endl;
+    printStep(node->child, level + 1);
+    printStep(node->sibling, level);
+}
+
+void BinomialHeap::print() {
+    printStep(_head, 0);
+}
+
 BinomialNode *BinomialHeap::head() {
     return _head;
 }
@@ -32,13 +48,13 @@ BinomialNode *BinomialHeap::min() {
     }
 }
 
-BinomialHeap insertNode(BinomialHeap heap, BinomialNode *node) {
+void insertNode(BinomialHeap &heap, BinomialNode *node) {
     auto newHeap = new BinomialHeap(node);
-    heap = binominalHeapUnion(*newHeap, heap);
+    heap = binomialHeapUnion(*newHeap, heap);
 }
 
 BinomialNode *binomialHeapMerge(BinomialHeap heapL, BinomialHeap heapR) {
-    BinomialNode *newHead = nullptr;
+    BinomialNode *newHead = nullptr, *newPtr = nullptr;
     BinomialNode *ptr1 = heapL.head();
     BinomialNode *ptr2 = heapR.head();
 
@@ -46,35 +62,35 @@ BinomialNode *binomialHeapMerge(BinomialHeap heapL, BinomialHeap heapR) {
         if (ptr1 && ptr2) {
             if (ptr1->degree() < ptr2->degree()) {
                 if (newHead) {
-                    newHead->sibling = ptr1;
-                    newHead = newHead->sibling;
+                    newPtr->sibling = ptr1;
+                    newPtr = newPtr->sibling;
                 } else {
-                    newHead = ptr1;
+                    newPtr = newHead = ptr1;
                 }
                 ptr1 = ptr1->sibling;
             } else {
                 if (newHead) {
-                    newHead->sibling = ptr2;
-                    newHead = newHead->sibling;
+                    newPtr->sibling = ptr2;
+                    newPtr = newPtr->sibling;
                 } else {
-                    newHead = ptr2;
+                    newPtr = newHead = ptr2;
                 }
                 ptr2 = ptr2->sibling;
             }
         } else if (ptr1) {
             if (newHead) {
-                newHead->sibling = ptr1;
-                newHead = newHead->sibling;
+                newPtr->sibling = ptr1;
+                newPtr = newPtr->sibling;
             } else {
-                newHead = ptr1;
+                newPtr = newHead = ptr1;
             }
             ptr1 = ptr1->sibling;
         } else {
             if (newHead) {
-                newHead->sibling = ptr2;
-                newHead = newHead->sibling;
+                newPtr->sibling = ptr2;
+                newPtr = newPtr->sibling;
             } else {
-                newHead = ptr2;
+                newPtr = newHead = ptr2;
             }
             ptr2 = ptr2->sibling;
         }
@@ -89,7 +105,7 @@ void binomialLink(BinomialNode *resRoot, BinomialNode *resChild) {
     resRoot->incDegree();
 }
 
-BinomialHeap binominalHeapUnion(BinomialHeap heapL, BinomialHeap heapR) {
+BinomialHeap binomialHeapUnion(BinomialHeap heapL, BinomialHeap heapR) {
     auto res = new BinomialHeap(binomialHeapMerge(heapL, heapR));
     delete &heapL;
     delete &heapR;
