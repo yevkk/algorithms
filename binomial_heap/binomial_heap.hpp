@@ -2,15 +2,16 @@
 #define BINOMIAL_HEAP_BINOMIAL_HEAP_HPP
 
 
-#include "binominal_node.hpp"
+#include "binomial_node.hpp"
 
+template <typename DataType>
 class BinomialHeap {
 private:
-    BinomialNode *_head;
+    BinomialNode<DataType> *_head;
 
 
 public:
-    void printStep(BinomialNode *node, int level);
+    void printStep(BinomialNode<DataType> *node, int level);
 
     BinomialHeap();
 
@@ -18,23 +19,27 @@ public:
 
     void print();
 
-    explicit BinomialHeap(BinomialNode *head);
+    explicit BinomialHeap(BinomialNode<DataType> *head);
 
-    BinomialNode *head();
+    BinomialNode<DataType> *head();
 
-    void setHead(BinomialNode *node);
+    void setHead(BinomialNode<DataType> *node);
 
-    BinomialNode *min();
+    BinomialNode<DataType> *min();
 
 };
+template <typename DataType>
+void insertNode(BinomialHeap<DataType> &heap, BinomialNode<DataType> *node);
 
-void insertNode(BinomialHeap &heap, BinomialNode *node);
+template <typename DataType>
+BinomialNode<DataType> *binomialHeapMerge(BinomialHeap<DataType> heapL, BinomialHeap<DataType> heapR);
 
-BinomialNode *binomialHeapMerge(BinomialHeap heapL, BinomialHeap heapR);
+template <typename DataType>
+void binomialLink(BinomialNode<DataType> *resRoot, BinomialNode<DataType> *resChild);
 
-void binomialLink(BinomialNode *resRoot, BinomialNode *resChild);
+template <typename DataType>
+BinomialHeap<DataType> binomialHeapUnion(BinomialHeap<DataType> &heapL, BinomialHeap<DataType> &heapR);
 
-BinomialHeap binomialHeapUnion(BinomialHeap &heapL, BinomialHeap &heapR);
-
+#include "binomial_heap.hxx"
 
 #endif //BINOMIAL_HEAP_BINOMIAL_HEAP_HPP

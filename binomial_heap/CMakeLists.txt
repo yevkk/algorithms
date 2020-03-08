@@ -3,4 +3,4 @@ project(binomial_heap)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(binomial_heap main.cpp sqlite3.h sqlite3.c binominal_node.cpp binominal_node.hpp binomial_heap.cpp binomial_heap.hpp)
+add_executable(binomial_heap main.cpp sqlite3.h sqlite3.c binomial_node.hxx binomial_node.hpp binomial_heap.hxx binomial_heap.hpp)

@@ -1,15 +1,22 @@
+#ifndef BINOMIAL_HEAP_BINOMIAL_HEAP_HXX
+#define BINOMIAL_HEAP_BINOMIAL_HEAP_HXX
+
 #include "binomial_heap.hpp"
 
-BinomialHeap::BinomialHeap() :
+template <typename DataType>
+BinomialHeap<DataType>::BinomialHeap() :
         _head(nullptr) {}
 
-BinomialHeap::BinomialHeap(BinomialNode *head) {
+template <typename DataType>
+BinomialHeap<DataType>::BinomialHeap(BinomialNode<DataType> *head) {
     _head = head;
 }
 
-BinomialHeap::~BinomialHeap() = default;
+template <typename DataType>
+BinomialHeap<DataType>::~BinomialHeap() = default;
 
-void BinomialHeap::printStep(BinomialNode *node, int level) {
+template <typename DataType>
+void BinomialHeap<DataType>::printStep(BinomialNode<DataType> *node, int level) {
     if (node == nullptr) return;
 
     std::cout << '|';
@@ -21,28 +28,32 @@ void BinomialHeap::printStep(BinomialNode *node, int level) {
     printStep(node->sibling, level);
 }
 
-void BinomialHeap::print() {
+template <typename DataType>
+void BinomialHeap<DataType>::print() {
     printStep(_head, 0);
 }
 
-BinomialNode *BinomialHeap::head() {
+template <typename DataType>
+BinomialNode<DataType> *BinomialHeap<DataType>::head() {
     return _head;
 }
 
-void BinomialHeap::setHead(BinomialNode *node) {
+template <typename DataType>
+void BinomialHeap<DataType>::setHead(BinomialNode<DataType> *node) {
     _head = node;
 }
 
-BinomialNode *BinomialHeap::min() {
-    if (_head != nullptr) {
-        BinomialNode *min = _head;
-        BinomialNode *ptr = _head;
+template <typename DataType>
+BinomialNode<DataType> *BinomialHeap<DataType>::min() {
+    if (_head) {
+        BinomialNode<DataType> *min = _head;
+        BinomialNode<DataType> *ptr = _head;
 
-        while (ptr != nullptr) {
+        while (ptr) {
             if (*(ptr->data()) < *(min->data())) {
                 min = ptr;
-                ptr = ptr->sibling;
             }
+            ptr = ptr->sibling;
         }
         return min;
     } else {
@@ -50,15 +61,17 @@ BinomialNode *BinomialHeap::min() {
     }
 }
 
-void insertNode(BinomialHeap &heap, BinomialNode *node) {
-    auto newHeap = new BinomialHeap(node);
+template <typename DataType>
+void insertNode(BinomialHeap<DataType> &heap, BinomialNode<DataType> *node) {
+    auto newHeap = new BinomialHeap<DataType>(node);
     heap = binomialHeapUnion(*newHeap, heap);
 }
 
-BinomialNode *binomialHeapMerge(BinomialHeap heapL, BinomialHeap heapR) {
-    BinomialNode *newHead = nullptr, *newPtr = nullptr;
-    BinomialNode *ptr1 = heapL.head();
-    BinomialNode *ptr2 = heapR.head();
+template <typename DataType>
+BinomialNode<DataType> *binomialHeapMerge(BinomialHeap<DataType> heapL, BinomialHeap<DataType> heapR) {
+    BinomialNode<DataType> *newHead = nullptr, *newPtr = nullptr;
+    BinomialNode<DataType> *ptr1 = heapL.head();
+    BinomialNode<DataType> *ptr2 = heapR.head();
 
     while (ptr1 || ptr2) {
         if (ptr1 && ptr2) {
@@ -100,18 +113,17 @@ BinomialNode *binomialHeapMerge(BinomialHeap heapL, BinomialHeap heapR) {
     return newHead;
 }
 
-void binomialLink(BinomialNode *resRoot, BinomialNode *resChild) {
+template <typename DataType>
+void binomialLink(BinomialNode<DataType> *resRoot, BinomialNode<DataType> *resChild) {
     resChild->parent = resRoot;
     resChild->sibling = resRoot->child;
     resRoot->child = resChild;
     resRoot->incDegree();
 }
 
-BinomialHeap binomialHeapUnion(BinomialHeap &heapL, BinomialHeap &heapR) {
-    static int a = 0;
-    a++;
-
-    auto res = new BinomialHeap(binomialHeapMerge(heapL, heapR));
+template <typename DataType>
+BinomialHeap<DataType> binomialHeapUnion(BinomialHeap<DataType> &heapL, BinomialHeap<DataType> &heapR) {
+    auto res = new BinomialHeap<DataType>(binomialHeapMerge(heapL, heapR));
     delete &heapL;
     delete &heapR;
 
@@ -119,12 +131,11 @@ BinomialHeap binomialHeapUnion(BinomialHeap &heapL, BinomialHeap &heapR) {
         return *res;
     }
 
-    BinomialNode *prevX = nullptr;
-    BinomialNode *x = res->head();
-    BinomialNode *nextX = x->sibling;
+    BinomialNode<DataType> *prevX = nullptr;
+    BinomialNode<DataType> *x = res->head();
+    BinomialNode<DataType> *nextX = x->sibling;
 
     while (nextX) {
-        std::cout << a;
         if ((x->degree() != nextX->degree()) || (nextX->sibling && nextX->sibling->degree() == x->degree())) {
             prevX = x;
             x = nextX;
@@ -147,4 +158,6 @@ BinomialHeap binomialHeapUnion(BinomialHeap &heapL, BinomialHeap &heapR) {
 
     return *res;
 }
+
+#endif //BINOMIAL_HEAP_BINOMIAL_HEAP_HXX
 
