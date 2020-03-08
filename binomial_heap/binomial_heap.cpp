@@ -7,6 +7,8 @@ BinomialHeap::BinomialHeap(BinomialNode *head) {
     _head = head;
 }
 
+BinomialHeap::~BinomialHeap() = default;
+
 void BinomialHeap::printStep(BinomialNode *node, int level) {
     if (node == nullptr) return;
 
@@ -14,7 +16,7 @@ void BinomialHeap::printStep(BinomialNode *node, int level) {
     for (int i = 0; i < level; i++) {
         std::cout << '\t' << '|';
     }
-    std::cout << *(node->data()) << std::endl;
+    std::cout << *(node->data()) << " (degree: " << node->degree() << ")" << std::endl;
     printStep(node->child, level + 1);
     printStep(node->sibling, level);
 }
@@ -105,40 +107,44 @@ void binomialLink(BinomialNode *resRoot, BinomialNode *resChild) {
     resRoot->incDegree();
 }
 
-BinomialHeap binomialHeapUnion(BinomialHeap heapL, BinomialHeap heapR) {
+BinomialHeap binomialHeapUnion(BinomialHeap &heapL, BinomialHeap &heapR) {
+    static int a = 0;
+    a++;
+
     auto res = new BinomialHeap(binomialHeapMerge(heapL, heapR));
     delete &heapL;
     delete &heapR;
 
-    if (res->head() == nullptr) {
+    if (!res->head()) {
         return *res;
     }
 
-    BinomialNode *prev_x = nullptr;
+    BinomialNode *prevX = nullptr;
     BinomialNode *x = res->head();
-    BinomialNode *next_x = x->sibling;
+    BinomialNode *nextX = x->sibling;
 
-    while (next_x) {
-        if ((x->degree() != next_x->degree()) ||
-            (next_x->sibling != nullptr && next_x->sibling->degree() && next_x->sibling->degree() == x->degree())) {
-            prev_x = x;
-            x = next_x;
+    while (nextX) {
+        std::cout << a;
+        if ((x->degree() != nextX->degree()) || (nextX->sibling && nextX->sibling->degree() == x->degree())) {
+            prevX = x;
+            x = nextX;
         } else {
-            if (*(x->data()) <= *(next_x->data())) {
-                x->sibling = next_x->sibling;
-                binomialLink(x, next_x);
+            if (*(x->data()) <= *(nextX->data())) {
+                x->sibling = nextX->sibling;
+                binomialLink(x, nextX);
             } else {
-                if (!prev_x) {
-                    res->setHead(next_x);
+                if (!prevX) {
+                    res->setHead(nextX);
                 } else {
-                    prev_x->sibling = next_x;
-                    binomialLink(next_x, x);
-                    x = next_x;
+                    prevX->sibling = nextX;
                 }
+                binomialLink(nextX, x);
+                x = nextX;
             }
         }
-        next_x = x->sibling;
+        nextX = x->sibling;
     }
+
     return *res;
 }
 

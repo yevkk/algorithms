@@ -9,11 +9,12 @@ private:
     BinomialNode *_head;
 
 
-
 public:
     void printStep(BinomialNode *node, int level);
 
     BinomialHeap();
+
+    ~BinomialHeap();
 
     void print();
 
@@ -33,7 +34,7 @@ BinomialNode *binomialHeapMerge(BinomialHeap heapL, BinomialHeap heapR);
 
 void binomialLink(BinomialNode *resRoot, BinomialNode *resChild);
 
-BinomialHeap binomialHeapUnion(BinomialHeap heapL, BinomialHeap heapR);
+BinomialHeap binomialHeapUnion(BinomialHeap &heapL, BinomialHeap &heapR);
 
 
 #endif //BINOMIAL_HEAP_BINOMIAL_HEAP_HPP

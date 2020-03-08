@@ -7,7 +7,6 @@ int main() {
     BinomialHeap heap;
     for (int i = 0; i < 10; i++) {
         insertNode(heap, new BinomialNode(students[i]));
-        heap.print();
     }
     heap.print();
     return 0;
