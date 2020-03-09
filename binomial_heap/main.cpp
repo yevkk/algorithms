@@ -5,12 +5,12 @@
 int main() {
     auto students = getStudentsFromDB("../../department.db");
     BinomialHeap<Student> heap;
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 30; i++) {
         insertNode(heap, new BinomialNode<Student>(students[i]));
     }
     heap.print();
-    for (int i = 0; i < 10; i++) {
-        std::cout << *(heap.min()->data()) << std::endl;
+    for (int i = 0; i < 30; i++) {
+        std::cout << *(extractMin(heap)->data()) << std::endl;
     }
     return 0;
 }

@@ -40,6 +40,9 @@ void binomialLink(BinomialNode<DataType> *resRoot, BinomialNode<DataType> *resCh
 template <typename DataType>
 BinomialHeap<DataType> binomialHeapUnion(BinomialHeap<DataType> &heapL, BinomialHeap<DataType> &heapR);
 
+template <typename DataType>
+BinomialNode<DataType> *extractMin(BinomialHeap<DataType> &heap);
+
 #include "binomial_heap.hxx"
 
 #endif //BINOMIAL_HEAP_BINOMIAL_HEAP_HPP
