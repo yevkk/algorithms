@@ -35,6 +35,9 @@ template<typename DataType>
 void insertNode(BinomialHeap<DataType> &heap, BinomialNode<DataType> *node);
 
 template<typename DataType>
+void deleteNode(BinomialHeap<DataType> &heap, BinomialNode<DataType> *node);
+
+template<typename DataType>
 BinomialNode<DataType> *binomialHeapMerge(BinomialHeap<DataType> heapL, BinomialHeap<DataType> heapR);
 
 template<typename DataType>

@@ -2,6 +2,7 @@
 #define BINOMIAL_HEAP_BINOMIAL_HEAP_HXX
 
 #include "binomial_heap.hpp"
+#include "infnull.hpp"
 
 template<typename DataType>
 BinomialHeap<DataType>::BinomialHeap() :
@@ -66,6 +67,12 @@ template<typename DataType>
 void insertNode(BinomialHeap<DataType> &heap, BinomialNode<DataType> *node) {
     auto newHeap = new BinomialHeap<DataType>(node);
     heap = binomialHeapUnion(*newHeap, heap);
+}
+
+template<typename DataType>
+void deleteNode(BinomialHeap<DataType> &heap, BinomialNode<DataType> *node) {
+    decreaseKey(heap, node, &(null<DataType>::value));
+    extractMin(heap);
 }
 
 template<typename DataType>
@@ -192,6 +199,9 @@ BinomialNode<DataType> *extractMin(BinomialHeap<DataType> &heap) {
         while (x) {
             newHead = new BinomialNode<DataType>(x->data());
             newHead->child = x->child;
+            while (newHead->degree() != x->degree()) {
+                newHead->incDegree();
+            }
 
             newHead->sibling = ptr;
             ptr = newHead;

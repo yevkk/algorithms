@@ -16,10 +16,13 @@ int main() {
     decreaseKey(heap, heap.head()->sibling->child->sibling, &tmp);
 
     heap.print();
+    std::cout << std::endl;
+
+    deleteNode(heap, heap.head()->sibling->child->sibling);
+    heap.print();
+    std::cout << std::endl;
 
 
-//    for (int i = 0; i < 30; i++) {
-//        std::cout << *(extractMin(heap)->data()) << std::endl;
-//    }
+
     return 0;
 }
