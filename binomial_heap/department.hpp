@@ -100,8 +100,4 @@ inline bool operator<=(Student &studentL, Student &studentR) {
     return !(studentL > studentR);
 }
 
-inline void operator-=(Student &student, double &num) {
-    student.decAveragePoint(student.getAveragePoint() - num);
-}
-
 #endif // RED_BLACK_TREE_DEPARTMENT_HPP

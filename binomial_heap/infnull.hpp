@@ -59,6 +59,9 @@ struct null<Student> {
 
 Student null<Student>::value = Student("null", 0, 0);
 
-
+template<>
+struct null<std::pair<int, int>> {
+    static constexpr std::pair<int, int> value = {0, 0};
+};
 
 #endif //BINOMIAL_HEAP_INFNULL_HPP
