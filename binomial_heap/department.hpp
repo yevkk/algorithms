@@ -32,9 +32,9 @@ public:
         return _averagePoint;
     }
 
-    void decAveragePoint(int newValue) {
-        assert((newValue > 0) && "newValue < 0");
-        assert((newValue < _averagePoint) && "new value bigger than current value");
+    void decAveragePoint(double newValue) {
+        assert((newValue >= 0) && "newValue < 0");
+        assert((newValue <= _averagePoint) && "new value bigger than current value");
         _averagePoint = newValue;
     }
 };
@@ -98,6 +98,10 @@ inline bool operator>=(Student &studentL, Student &studentR) {
 
 inline bool operator<=(Student &studentL, Student &studentR) {
     return !(studentL > studentR);
+}
+
+inline void operator-=(Student &student, double &num) {
+    student.decAveragePoint(student.getAveragePoint() - num);
 }
 
 #endif // RED_BLACK_TREE_DEPARTMENT_HPP

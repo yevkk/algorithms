@@ -20,6 +20,8 @@ public:
     int degree();
 
     void incDegree();
+
+    void setData(DataType *data, bool deletePrev = true);
 };
 
 #include "binomial_node.hxx"

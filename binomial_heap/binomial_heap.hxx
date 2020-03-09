@@ -211,5 +211,21 @@ BinomialNode<DataType> *extractMin(BinomialHeap<DataType> &heap) {
     }
 }
 
+template<typename DataType>
+void decreaseKey(BinomialHeap<DataType> &heap, BinomialNode<DataType> *node, DataType *newValue) {
+    assert(*newValue < *(node->data()));
+    node->setData(newValue);
+    auto y = node;
+    auto z = y->parent;
+
+    while (z && (*(y->data()) < *(z->data()))) {
+        auto tmp = y->data();
+        y->setData(z->data(), false);
+        z->setData(tmp, false);
+        y = z;
+        z = y->parent;
+    }
+}
+
 #endif //BINOMIAL_HEAP_BINOMIAL_HEAP_HXX
 

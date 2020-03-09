@@ -4,7 +4,9 @@
 
 #include "binomial_node.hpp"
 
-template <typename DataType>
+#include <cassert>
+
+template<typename DataType>
 class BinomialHeap {
 private:
     BinomialNode<DataType> *_head;
@@ -28,20 +30,24 @@ public:
     BinomialNode<DataType> *min();
 
 };
-template <typename DataType>
+
+template<typename DataType>
 void insertNode(BinomialHeap<DataType> &heap, BinomialNode<DataType> *node);
 
-template <typename DataType>
+template<typename DataType>
 BinomialNode<DataType> *binomialHeapMerge(BinomialHeap<DataType> heapL, BinomialHeap<DataType> heapR);
 
-template <typename DataType>
+template<typename DataType>
 void binomialLink(BinomialNode<DataType> *resRoot, BinomialNode<DataType> *resChild);
 
-template <typename DataType>
+template<typename DataType>
 BinomialHeap<DataType> binomialHeapUnion(BinomialHeap<DataType> &heapL, BinomialHeap<DataType> &heapR);
 
-template <typename DataType>
+template<typename DataType>
 BinomialNode<DataType> *extractMin(BinomialHeap<DataType> &heap);
+
+template<typename DataType>
+void decreaseKey(BinomialHeap<DataType> &heap, BinomialNode<DataType> *node, DataType *newValue);
 
 #include "binomial_heap.hxx"
 

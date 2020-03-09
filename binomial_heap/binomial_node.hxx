@@ -26,4 +26,11 @@ void BinomialNode<DataType>::incDegree() {
     _degree++;
 }
 
+template<typename DataType>
+void BinomialNode<DataType>::setData(DataType *data, bool deletePrev) {
+    if (deletePrev)
+        delete _data;
+    _data = data;
+}
+
 #endif //BINOMIAL_HEAP_BINOMIAL_NODE_HXX

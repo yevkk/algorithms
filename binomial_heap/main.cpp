@@ -5,12 +5,21 @@
 int main() {
     auto students = getStudentsFromDB("../../department.db");
     BinomialHeap<Student> heap;
-    for (int i = 0; i < 30; i++) {
+    for (int i = 0; i < 10; i++) {
         insertNode(heap, new BinomialNode<Student>(students[i]));
     }
     heap.print();
-    for (int i = 0; i < 30; i++) {
-        std::cout << *(extractMin(heap)->data()) << std::endl;
-    }
+    std::cout << std::endl;
+
+    auto tmp = *heap.head()->sibling->child->sibling->data();
+    tmp.decAveragePoint(50);
+    decreaseKey(heap, heap.head()->sibling->child->sibling, &tmp);
+
+    heap.print();
+
+
+//    for (int i = 0; i < 30; i++) {
+//        std::cout << *(extractMin(heap)->data()) << std::endl;
+//    }
     return 0;
 }
