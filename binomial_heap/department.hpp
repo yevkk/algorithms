@@ -7,6 +7,7 @@
 #include <vector>
 #include <iostream>
 #include <sstream>
+#include <cassert>
 
 class Student {
 private:
@@ -29,6 +30,12 @@ public:
 
     double getAveragePoint() {
         return _averagePoint;
+    }
+
+    void decAveragePoint(int newValue) {
+        assert((newValue > 0) && "newValue < 0");
+        assert((newValue < _averagePoint) && "new value bigger than current value");
+        _averagePoint = newValue;
     }
 };
 
