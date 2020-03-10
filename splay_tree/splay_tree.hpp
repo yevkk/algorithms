@@ -16,6 +16,8 @@ private:
 
     Node *_root;
 
+    SplayTree();
+
     void splay(Node *node);
 
     void rightRotate(Node *node);

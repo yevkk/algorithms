@@ -10,6 +10,9 @@ SplayTree<DataType>::Node::Node(DataType dataArg) :
         parent(nullptr),
         data(dataArg) {}
 
+template<typename DataType>
+SplayTree<DataType>::SplayTree() :
+        _root(nullptr) {}
 
 template<typename DataType>
 void SplayTree<DataType>::rightRotate(SplayTree::Node *node) {
@@ -55,6 +58,31 @@ void SplayTree<DataType>::leftRotate(SplayTree::Node *node) {
     }
     y->left = node;
     node->parent = y;
+}
+
+template<typename DataType>
+void SplayTree<DataType>::splay(SplayTree::Node *node) {
+    while (node->parent) {
+        if (!node->parent->parent) {
+            if (node->parent->right == node) {
+                leftRotate(node->parent);
+            } else {
+                rightRotate(node->parent);
+            }
+        } else if (node->parent->left == node && node->parent->parent->left == node->parent) {
+            rightRotate(node->parent->parent);
+            rightRotate(node->parent);
+        } else if (node->parent->right == node && node->parent->parent->right == node->parent) {
+            leftRotate(node->parent->parent);
+            leftRotate(node->parent);
+        } else if (node->parent->right == node && node->parent->parent->left == node->parent) {
+            leftRotate(node->parent);
+            rightRotate(node->parent);
+        } else {
+            rightRotate(node->parent);
+            leftRotate(node->parent);
+        }
+    }
 }
 
 #endif //SPLAY_TREE_SPLAY_TREE_HXX
