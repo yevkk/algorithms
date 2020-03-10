@@ -14,13 +14,15 @@ private:
         explicit Node(DataType dataArg);
     };
 
-    Node *root;
+    Node *_root;
 
     void splay(Node *node);
 
     void rightRotate(Node *node);
 
     void leftRotate(Node *node);
+
+    void printStep(Node *node, int level);
 
 public:
     void insert(DataType dataArg);
@@ -30,8 +32,9 @@ public:
     DataType min();
 
     DataType max();
-};
 
+    void print();
+};
 
 #include "splay_tree.hxx"
 
