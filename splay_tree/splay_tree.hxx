@@ -4,7 +4,7 @@
 #include "splay_tree.hpp"
 
 template<typename DataType>
-SplayTree<DataType>::Node::Node(DataType dataArg) :
+STNode<DataType>::STNode(DataType dataArg) :
         left(nullptr),
         right(nullptr),
         parent(nullptr),
@@ -84,5 +84,7 @@ void SplayTree<DataType>::splay(SplayTree::Node *node) {
         }
     }
 }
+
+
 
 #endif //SPLAY_TREE_SPLAY_TREE_HXX

@@ -2,38 +2,45 @@
 #define SPLAY_TREE_SPLAY_TREE_HPP
 
 template<typename DataType>
+class STNode {
+
+public:
+    explicit STNode(DataType dataArg);
+
+    STNode *left;
+    STNode *right;
+    STNode *parent;
+    DataType data;
+};
+
+template<typename DataType>
 class SplayTree {
 private:
-    class Node {
-    public:
-        Node *left;
-        Node *right;
-        Node *parent;
-        DataType data;
 
-        explicit Node(DataType dataArg);
-    };
-
-    Node *_root;
+    STNode<DataType> *_root;
 
     SplayTree();
 
-    void splay(Node *node);
+    void splay(STNode<DataType> *node);
 
-    void rightRotate(Node *node);
+    void rightRotate(STNode<DataType> *node);
 
-    void leftRotate(Node *node);
+    void leftRotate(STNode<DataType> *node);
 
-    void printStep(Node *node, int level);
+    STNode<DataType>* subtreeMin(STNode<DataType>* root);
+
+    STNode<DataType>* subtreeMax(STNode<DataType>* root);
+
+    STNode<DataType>* successor(STNode<DataType> *node);
+
+    STNode<DataType>* predecessor(STNode<DataType> *node);
+
+    void printStep(STNode<DataType> *node, int level);
 
 public:
     void insert(DataType dataArg);
 
-    void remove(Node *node);
-
-    DataType min();
-
-    DataType max();
+    void remove(STNode<DataType> *node);
 
     void print();
 };
