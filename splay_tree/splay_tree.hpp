@@ -19,8 +19,6 @@ private:
 
     STNode<DataType> *_root;
 
-    SplayTree();
-
     void splay(STNode<DataType> *node);
 
     void rightRotate(STNode<DataType> *node);
@@ -38,6 +36,8 @@ private:
     void printStep(STNode<DataType> *node, int level);
 
 public:
+    SplayTree();
+
     void insert(DataType dataArg);
 
     void remove(STNode<DataType> *node);
