@@ -160,5 +160,32 @@ void SplayTree<DataType>::print() {
     printStep(_root, 0);
 }
 
+template<typename DataType>
+void SplayTree<DataType>::insert(DataType dataArg) {
+    STNode<DataType> *prev = nullptr;
+    STNode<DataType> *ptr = _root;
+
+    while (ptr) {
+        prev = ptr;
+
+        if (dataArg > ptr->data) {
+            ptr = ptr->right;
+        } else {
+            ptr = ptr->left;
+        }
+    }
+
+    STNode<DataType> *newNode{nullptr, nullptr, prev, dataArg};
+    if (!prev) {
+        _root = newNode;
+    } else if (dataArg > prev->data) {
+        prev->right = newNode;
+    } else {
+        prev->left = newNode;
+    };
+
+    splay(newNode);
+}
+
 
 #endif //SPLAY_TREE_SPLAY_TREE_HXX
