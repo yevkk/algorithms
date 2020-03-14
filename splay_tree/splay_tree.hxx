@@ -260,5 +260,17 @@ void SplayTree<DataType>::remove(DataType &key) {
     }
 }
 
+template<typename DataType>
+void SplayTree<DataType>::join(SplayTree<DataType> &tree) {
+    if (this->min() > tree.max()) {
+        tree._splay(tree._subtreeMax(tree._root));
+        tree._root->right = _root;
+        _root = tree._root;
+    } else if (this->max() < tree.min()) {
+        this->_splay(this->_subtreeMax(this->_root));
+        _root->right = tree._root;
+    }
+}
+
 
 #endif //SPLAY_TREE_SPLAY_TREE_HXX

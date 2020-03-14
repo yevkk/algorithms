@@ -52,6 +52,8 @@ public:
 
     bool contains(DataType &key);
 
+    void join(SplayTree<DataType> &tree);
+
     void print();
 };
 
