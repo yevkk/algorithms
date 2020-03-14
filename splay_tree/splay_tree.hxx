@@ -175,7 +175,10 @@ void SplayTree<DataType>::insert(DataType dataArg) {
         }
     }
 
-    STNode<DataType> *newNode{nullptr, nullptr, prev, dataArg};
+    STNode<DataType> *newNode = new STNode<DataType>(dataArg);
+    newNode->left = newNode->right = nullptr;
+    newNode->parent = prev;
+
     if (!prev) {
         _root = newNode;
     } else if (dataArg > prev->data) {

@@ -20,6 +20,11 @@ public:
             _group(group),
             _averagePoint(averagePoint) {};
 
+    Student(Student &student) :
+            _fullName(student.getFullName()),
+            _group(student.getGroup()),
+            _averagePoint(student.getAveragePoint()) {};
+
     std::string getFullName() {
         return _fullName;
     }

@@ -2,11 +2,11 @@
 #include "splay_tree.hpp"
 #include <iostream>
 
-void example1() {
+void example1(int count = 10) {
     auto students = getStudentsFromDB("../../department.db");
     SplayTree<Student> tree;
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < count; i++) {
         tree.insert(*(students[i]));
         tree.print();
         std::cout << std::endl << std::endl;
@@ -14,6 +14,6 @@ void example1() {
 }
 
 int main() {
-    example1();
+    example1(10);
     return 0;
 }
