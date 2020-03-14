@@ -25,13 +25,15 @@ private:
 
     void _leftRotate(STNode<DataType> *node);
 
-    STNode<DataType>* _subtreeMin(STNode<DataType>* localRoot);
+    STNode<DataType> *_subtreeMin(STNode<DataType> *localRoot);
 
-    STNode<DataType>* _subtreeMax(STNode<DataType>* localRoot);
+    STNode<DataType> *_subtreeMax(STNode<DataType> *localRoot);
 
-    STNode<DataType>* _successor(STNode<DataType> *node);
+    STNode<DataType> *_successor(STNode<DataType> *node);
 
-    STNode<DataType>* _predecessor(STNode<DataType> *node);
+    STNode<DataType> *_predecessor(STNode<DataType> *node);
+
+    STNode<DataType> *_search(DataType &key);
 
     void _printStep(STNode<DataType> *node, int level);
 
@@ -45,6 +47,8 @@ public:
     DataType min();
 
     DataType max();
+
+    bool contains(DataType &key);
 
     void print();
 };

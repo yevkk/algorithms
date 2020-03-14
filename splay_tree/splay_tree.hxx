@@ -190,5 +190,34 @@ void SplayTree<DataType>::insert(DataType dataArg) {
     _splay(newNode);
 }
 
+template<typename DataType>
+STNode<DataType> *SplayTree<DataType>::_search(DataType &key) {
+    auto ptr = _root;
+
+    while (ptr) {
+         if (key == ptr->data) {
+            _splay(ptr);
+            return ptr;
+        }
+
+        if (key < ptr->data) {
+            ptr = ptr->left;
+        } else if (key > ptr->data) {
+            ptr = ptr->right;
+        }
+    }
+
+    return nullptr;
+}
+
+template<typename DataType>
+bool SplayTree<DataType>::contains(DataType &key) {
+    return _search(key) != nullptr;
+}
+
+template<typename DataType>
+void SplayTree<DataType>::remove(STNode<DataType> *node) {
+
+}
 
 #endif //SPLAY_TREE_SPLAY_TREE_HXX
