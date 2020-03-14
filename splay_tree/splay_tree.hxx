@@ -2,6 +2,7 @@
 #define SPLAY_TREE_SPLAY_TREE_HXX
 
 #include "splay_tree.hpp"
+#include <iostream>
 
 template<typename DataType>
 STNode<DataType>::STNode(DataType dataArg) :
@@ -15,8 +16,8 @@ SplayTree<DataType>::SplayTree() :
         _root(nullptr) {}
 
 template<typename DataType>
-void SplayTree<DataType>::rightRotate(SplayTree::Node *node) {
-    Node *y = node->left;
+void SplayTree<DataType>::rightRotate(STNode<DataType> *node) {
+    STNode<DataType> *y = node->left;
 
     if (y) {
         node->left = y->right;
@@ -38,8 +39,8 @@ void SplayTree<DataType>::rightRotate(SplayTree::Node *node) {
 }
 
 template<typename DataType>
-void SplayTree<DataType>::leftRotate(SplayTree::Node *node) {
-    Node *y = node->right;
+void SplayTree<DataType>::leftRotate(STNode<DataType> *node) {
+    STNode<DataType> *y = node->right;
 
     if (y) {
         node->right = y->left;
@@ -61,7 +62,7 @@ void SplayTree<DataType>::leftRotate(SplayTree::Node *node) {
 }
 
 template<typename DataType>
-void SplayTree<DataType>::splay(SplayTree::Node *node) {
+void SplayTree<DataType>::splay(STNode<DataType> *node) {
     while (node->parent) {
         if (!node->parent->parent) {
             if (node->parent->right == node) {
@@ -85,6 +86,79 @@ void SplayTree<DataType>::splay(SplayTree::Node *node) {
     }
 }
 
+template<typename DataType>
+STNode<DataType> *SplayTree<DataType>::subtreeMin(STNode<DataType> *localRoot) {
+    auto ptr = localRoot;
+    while (ptr->left)
+        ptr = ptr->left;
+
+    return ptr;
+}
+
+template<typename DataType>
+STNode<DataType> *SplayTree<DataType>::subtreeMax(STNode<DataType> *localRoot) {
+    auto ptr = localRoot;
+    while (ptr->right)
+        ptr = ptr->right;
+
+    return ptr;
+}
+
+template<typename DataType>
+STNode<DataType> *SplayTree<DataType>::successor(STNode<DataType> *node) {
+    if (node->right)
+        return subtreeMax(node);
+
+    auto ptr = node->parent;
+    while (ptr && node == ptr->right) {
+        node = ptr;
+        ptr = ptr->parent;
+    }
+
+    return ptr;
+}
+
+template<typename DataType>
+STNode<DataType> *SplayTree<DataType>::predecessor(STNode<DataType> *node) {
+    if (node->left)
+        return subtreeMin(node);
+
+    auto ptr = node->parent;
+    while (ptr && node == ptr->left) {
+        node = ptr;
+        ptr = ptr->parent;
+    }
+
+    return ptr;
+}
+
+template<typename DataType>
+void SplayTree<DataType>::printStep(STNode<DataType> *node, int level) {
+    if (!node) return;
+
+    std::cout << '|';
+    for (int i = 0; i < level; i++) {
+        std::cout << '\t' << '|';
+    }
+    std::cout << node->data << std::endl;
+    printStep(node->left, level + 1);
+    printStep(node->right, level + 1);
+}
+
+template<typename DataType>
+DataType SplayTree<DataType>::min() {
+    return subtreeMin(_root)->data;
+}
+
+template<typename DataType>
+DataType SplayTree<DataType>::max() {
+    return subtreeMax(_root)->data;
+}
+
+template<typename DataType>
+void SplayTree<DataType>::print() {
+    printStep(_root, 0);
+}
 
 
 #endif //SPLAY_TREE_SPLAY_TREE_HXX

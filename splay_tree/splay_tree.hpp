@@ -27,9 +27,9 @@ private:
 
     void leftRotate(STNode<DataType> *node);
 
-    STNode<DataType>* subtreeMin(STNode<DataType>* root);
+    STNode<DataType>* subtreeMin(STNode<DataType>* localRoot);
 
-    STNode<DataType>* subtreeMax(STNode<DataType>* root);
+    STNode<DataType>* subtreeMax(STNode<DataType>* localRoot);
 
     STNode<DataType>* successor(STNode<DataType> *node);
 
@@ -42,8 +42,14 @@ public:
 
     void remove(STNode<DataType> *node);
 
+    DataType min();
+
+    DataType max();
+
     void print();
 };
+
+
 
 #include "splay_tree.hxx"
 
