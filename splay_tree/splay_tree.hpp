@@ -19,21 +19,21 @@ private:
 
     STNode<DataType> *_root;
 
-    void splay(STNode<DataType> *node);
+    void _splay(STNode<DataType> *node);
 
-    void rightRotate(STNode<DataType> *node);
+    void _rightRotate(STNode<DataType> *node);
 
-    void leftRotate(STNode<DataType> *node);
+    void _leftRotate(STNode<DataType> *node);
 
-    STNode<DataType>* subtreeMin(STNode<DataType>* localRoot);
+    STNode<DataType>* _subtreeMin(STNode<DataType>* localRoot);
 
-    STNode<DataType>* subtreeMax(STNode<DataType>* localRoot);
+    STNode<DataType>* _subtreeMax(STNode<DataType>* localRoot);
 
-    STNode<DataType>* successor(STNode<DataType> *node);
+    STNode<DataType>* _successor(STNode<DataType> *node);
 
-    STNode<DataType>* predecessor(STNode<DataType> *node);
+    STNode<DataType>* _predecessor(STNode<DataType> *node);
 
-    void printStep(STNode<DataType> *node, int level);
+    void _printStep(STNode<DataType> *node, int level);
 
 public:
     SplayTree();
