@@ -195,7 +195,7 @@ STNode<DataType> *SplayTree<DataType>::_search(DataType &key) {
     auto ptr = _root;
 
     while (ptr) {
-         if (key == ptr->data) {
+        if (key == ptr->data) {
             _splay(ptr);
             return ptr;
         }
@@ -216,8 +216,49 @@ bool SplayTree<DataType>::contains(DataType &key) {
 }
 
 template<typename DataType>
-void SplayTree<DataType>::remove(STNode<DataType> *node) {
+void SplayTree<DataType>::_transplant(STNode<DataType> *where, STNode<DataType> *what) {
+    if (!where->parent) {
+        _root = what;
+    } else if (where == where->parent->left) {
+        where->parent->left = what;
+    } else {
+        where->parent->right = what;
+    }
 
+    if (what) {
+        what->parent = where->parent;
+    }
 }
+
+template<typename DataType>
+void SplayTree<DataType>::remove(DataType &key) {
+    auto forDelete = _search(key);
+
+    if (forDelete) {
+        if (!forDelete->right) {
+            _transplant(forDelete, forDelete->left);
+        } else if (!forDelete->left) {
+            _transplant(forDelete, forDelete->right);
+        } else {
+            auto ptr = _subtreeMin(forDelete->right);
+
+            if (ptr->parent != forDelete) {
+                _transplant(ptr, ptr->right);
+                ptr->right = forDelete->right;
+                ptr->parent = forDelete->left;
+            }
+
+            _transplant(forDelete, ptr);
+
+            ptr->left = forDelete->left;
+            ptr->left->parent = ptr;
+
+            _splay(ptr);
+        }
+
+        delete forDelete;
+    }
+}
+
 
 #endif //SPLAY_TREE_SPLAY_TREE_HXX

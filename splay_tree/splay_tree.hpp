@@ -35,6 +35,8 @@ private:
 
     STNode<DataType> *_search(DataType &key);
 
+    void _transplant(STNode<DataType> *where, STNode<DataType> *what);
+
     void _printStep(STNode<DataType> *node, int level);
 
 public:
@@ -42,7 +44,7 @@ public:
 
     void insert(DataType dataArg);
 
-    void remove(STNode<DataType> *node);
+    void remove(DataType &key);
 
     DataType min();
 

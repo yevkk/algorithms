@@ -39,6 +39,12 @@ void example2(int count = 10) {
     std::cout << "Searching for " << num[index] << std::endl;
     std::cout << "Result: " << std::boolalpha << tree.contains(num[index]) << std::endl;
     tree.print();
+    std::cout << std::endl << std::endl;
+
+    index = 3;
+    std::cout << "Deleting " << num[index] << std::endl;
+    tree.remove(num[index]);
+    tree.print();
 }
 
 int main() {
