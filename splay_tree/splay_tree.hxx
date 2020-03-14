@@ -272,5 +272,15 @@ void SplayTree<DataType>::join(SplayTree<DataType> &tree) {
     }
 }
 
+template<typename DataType>
+SplayTree<DataType> SplayTree<DataType>::split(DataType &key) {
+    _splay(_search(key));
+    SplayTree<DataType> tree;
+    tree._root = _root->right;
+    _root->right = nullptr;
+
+    return tree;
+}
+
 
 #endif //SPLAY_TREE_SPLAY_TREE_HXX

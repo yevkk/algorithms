@@ -15,6 +15,9 @@ int rand_int(int min, int max) {
 
 //creating splay tree with Student elements;
 void example1(int count = 10) {
+    if (count > 50) count = 50;
+    if (count < 0) count = 0;
+
     auto students = getStudentsFromDB("../../department.db");
     SplayTree<Student> tree;
 
@@ -53,7 +56,7 @@ void example2(int count = 10) {
     tree.print();
 }
 
-
+//join trees
 void example3(int count = 10) {
     int *nums1 = new int(count);
     int *nums2 = new int(count);
@@ -82,9 +85,35 @@ void example3(int count = 10) {
     std::cout << std::endl << std::endl;
 }
 
+//split tree
+void example4(int count = 10) {
+    if (count > 50) count = 50;
+
+    int num[50];
+    SplayTree<int> tree1;
+
+    for (int i = 0; i < count; i++) {
+        num[i] = rand_int(0, 50);
+        tree1.insert(num[i]);
+    }
+    std::cout << "Initial tree:\n";
+    tree1.print();
+    std::cout << std::endl << std::endl;
+
+    auto tree2 = tree1.split(num[5]);
+    std::cout << "Tree (>" << num[5] << "):\n";
+    tree2.print();
+    std::cout << std::endl << std::endl;
+
+    std::cout << "Tree (<=" << num[5] << "):\n";
+    tree1.print();
+    std::cout << std::endl << std::endl;
+
+}
+
 
 int main() {
-    example1(50);
+    example4(20);
 
     return 0;
 }

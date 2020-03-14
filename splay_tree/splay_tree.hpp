@@ -54,6 +54,8 @@ public:
 
     void join(SplayTree<DataType> &tree);
 
+    SplayTree<DataType> split(DataType &key);
+
     void print();
 };
 
