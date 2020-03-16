@@ -30,30 +30,44 @@ void example1(int count = 10) {
     }
 }
 
-//creating splay tree with int elements;
+//creating splay tree with Student elements;
 //searching for element;
 //removing an element;
 void example2(int count = 10) {
-    int *num = new int[count];
-    SplayTree<int> tree;
+    auto students = getStudentsFromDB("../../department.db");
+    SplayTree<Student> tree;
 
     for (int i = 0; i < count; i++) {
-        num[i] = rand_int(0, 50);
-        tree.insert(num[i]);
-        tree.print();
-        std::cout << std::endl << std::endl;
+        tree.insert(*(students[i]));
     }
 
+    tree.print();
+    std::cout << std::endl << std::endl;
+
     int index = 5;
-    std::cout << "Searching for " << num[index] << std::endl;
-    std::cout << "Result: " << std::boolalpha << tree.contains(num[index]) << std::endl;
+    std::cout << "Searching for " << *(students[index]) << std::endl;
+    std::cout << "Result: " << std::boolalpha << tree.contains(*(students[index])) << std::endl;
+    tree.print();
+    std::cout << std::endl << std::endl;
+
+    index = 1;
+    std::cout << "Deleting " << *(students[index]) << std::endl;
+    tree.remove(*(students[index]));
     tree.print();
     std::cout << std::endl << std::endl;
 
     index = 3;
-    std::cout << "Deleting " << num[index] << std::endl;
-    tree.remove(num[index]);
+    std::cout << "Deleting " << *(students[index]) << std::endl;
+    tree.remove(*(students[index]));
     tree.print();
+    std::cout << std::endl << std::endl;
+
+    index = 4;
+    std::cout << "Deleting " << *(students[index]) << std::endl;
+    tree.remove(*(students[index]));
+    tree.print();
+    std::cout << std::endl << std::endl;
+
 }
 
 //join trees
@@ -75,7 +89,7 @@ void example3(int count = 10) {
         nums2[i] = rand_int(50, 100);
         tree2.insert(nums2[i]);
     }
-    std::cout << "Tree 1 (> 50):\n";
+    std::cout << "Tree 2 (> 50):\n";
     tree2.print();
     std::cout << std::endl << std::endl;
 
@@ -113,7 +127,7 @@ void example4(int count = 10) {
 
 
 int main() {
-    example4 (20);
+    example2 ();
 
     return 0;
 }
