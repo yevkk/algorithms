@@ -85,7 +85,7 @@ inline bool operator<(Student &studentL, Student &studentR) {
 }
 
 inline bool operator>(Student &studentL, Student &studentR) {
-    return !(studentL < studentR);
+    return studentL.getAveragePoint() > studentR.getAveragePoint();
 }
 
 inline bool operator==(Student &studentL, Student &studentR) {
