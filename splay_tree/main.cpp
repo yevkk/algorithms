@@ -34,7 +34,7 @@ void example1(int count = 10) {
 //searching for element;
 //removing an element;
 void example2(int count = 10) {
-    int *num = new int(count);
+    int *num = new int[count];
     SplayTree<int> tree;
 
     for (int i = 0; i < count; i++) {
@@ -58,8 +58,8 @@ void example2(int count = 10) {
 
 //join trees
 void example3(int count = 10) {
-    int *nums1 = new int(count);
-    int *nums2 = new int(count);
+    int *nums1 = new int[count];
+    int *nums2 = new int[count];
     SplayTree<int> tree1;
     SplayTree<int> tree2;
 
@@ -89,7 +89,7 @@ void example3(int count = 10) {
 void example4(int count = 10) {
     if (count > 50) count = 50;
 
-    int num[50];
+    auto num = new int[count];
     SplayTree<int> tree1;
 
     for (int i = 0; i < count; i++) {
@@ -113,7 +113,7 @@ void example4(int count = 10) {
 
 
 int main() {
-    example4(20);
+    example4 (20);
 
     return 0;
 }
