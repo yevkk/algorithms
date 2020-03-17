@@ -55,7 +55,7 @@ int **optimalBSTRootMatrix(std::vector<double> &p, std::vector<double> &q) {
                 double tmp = subtree_exp[i][r - 1] + subtree_exp[r + 1][j] + subtree_cost[i][j];
                 if (tmp < subtree_exp[i][j]) {
                     subtree_exp[i][j] = tmp;
-                    root[i][j] = r - 1;
+                    root[i][j] = r;
                 }
             }
         }
@@ -87,13 +87,48 @@ int **optimalBSTRootMatrix(std::vector<double> &p, std::vector<double> &q) {
     return root;
 }
 
-//template<typename DataType>
-//BST<DataType> OptimalBST(std::vector<DataType *> &data, std::vector<double> &p, std::vector<double> &q) {
-//    assert((p.size() == data.size() == q.size() - 1) && "Invalid vectors");
-//
-//    auto rootMatrix = optimalBSTRootMatrix(p, q);
-//
-//
-//}
+template<typename DataType>
+BSTNode<DataType> *
+restoreOptimalBST(std::vector<DataType> &data, int **rootMatrix, int indexI, int indexJ, BSTNode<DataType> *parent) {
+    if (indexI == indexJ) {
+        auto node = new BSTNode<DataType>(data[indexI - 1]);
+        
+        node->parent = parent;
+        node->left = node->right = nullptr;
+
+        return node;
+    } else {
+        int index = rootMatrix[indexI][indexJ];
+
+        auto node = new BSTNode<DataType>(data[index - 1]);
+        node->parent = parent;
+        node->left = restoreOptimalBST(data, rootMatrix, indexI, index - 1, node);
+        node->right = restoreOptimalBST(data, rootMatrix, index + 1, indexJ, node);
+
+        return node;
+    }
+}
+
+template<typename DataType>
+BST<DataType> optimalBST(std::vector<DataType> &data, std::vector<double> &frequency,
+                         std::vector<double> &frequency_f) { //TODO: rename frequency_f;
+    //assert((frequency.size() == data.size() == frequency_f.size() - 1) && "Invalid vectors");
+
+    auto rootMatrix = optimalBSTRootMatrix(frequency, frequency_f);
+
+    for (int i = 1; i <= 5; i++) {
+        for (int j = 1; j <= 5; j++) {
+            std::cout << rootMatrix[i][j] << "   ";
+        }
+        std::cout << std::endl;
+    }
+    std::cout << std::endl;
+    std::cout << std::endl;
+
+    BST<DataType> tree;
+    tree.root = restoreOptimalBST<DataType>(data, rootMatrix, 1, data.size(), nullptr);
+
+    return tree;
+}
 
 #endif //OPTIMAL_BST_OPTIMAL_BST_HPP

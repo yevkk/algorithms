@@ -16,9 +16,6 @@ public:
 template<typename DataType>
 class BST {
 private:
-
-    BSTNode<DataType> *_root;
-
     BSTNode<DataType> *_subtreeMin(BSTNode<DataType> *localRoot);
 
     BSTNode<DataType> *_subtreeMax(BSTNode<DataType> *localRoot);
@@ -34,6 +31,8 @@ private:
     void _printStep(BSTNode<DataType> *node, int level);
 
 public:
+    BSTNode<DataType> *root;
+
     BST();
 
     void insert(DataType dataArg);

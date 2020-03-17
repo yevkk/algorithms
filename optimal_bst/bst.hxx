@@ -13,7 +13,7 @@ BSTNode<DataType>::BSTNode(DataType dataArg) :
 
 template<typename DataType>
 BST<DataType>::BST() :
-        _root(nullptr) {}
+        root(nullptr) {}
 
 
 template<typename DataType>
@@ -79,23 +79,23 @@ void BST<DataType>::_printStep(BSTNode<DataType> *node, int level) {
 
 template<typename DataType>
 DataType BST<DataType>::min() {
-    return _subtreeMin(_root)->data;
+    return _subtreeMin(root)->data;
 }
 
 template<typename DataType>
 DataType BST<DataType>::max() {
-    return _subtreeMax(_root)->data;
+    return _subtreeMax(root)->data;
 }
 
 template<typename DataType>
 void BST<DataType>::print() {
-    _printStep(_root, 0);
+    _printStep(root, 0);
 }
 
 template<typename DataType>
 void BST<DataType>::insert(DataType dataArg) {
     BSTNode<DataType> *prev = nullptr;
-    BSTNode<DataType> *ptr = _root;
+    BSTNode<DataType> *ptr = root;
 
     while (ptr) {
         prev = ptr;
@@ -112,7 +112,7 @@ void BST<DataType>::insert(DataType dataArg) {
     newNode->parent = prev;
 
     if (!prev) {
-        _root = newNode;
+        root = newNode;
     } else if (dataArg > prev->data) {
         prev->right = newNode;
     } else {
@@ -123,7 +123,7 @@ void BST<DataType>::insert(DataType dataArg) {
 
 template<typename DataType>
 BSTNode<DataType> *BST<DataType>::_search(DataType &key) {
-    auto ptr = _root;
+    auto ptr = root;
 
     while (ptr) {
         if (key == ptr->data) {
@@ -149,7 +149,7 @@ bool BST<DataType>::contains(DataType &key) {
 template<typename DataType>
 void BST<DataType>::_transplant(BSTNode<DataType> *where, BSTNode<DataType> *what) {
     if (!where->parent) {
-        _root = what;
+        root = what;
     } else if (where == where->parent->left) {
         where->parent->left = what;
     } else {
