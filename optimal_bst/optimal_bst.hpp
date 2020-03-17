@@ -51,6 +51,7 @@ int **optimalBSTRootMatrix(std::vector<double> &p, std::vector<double> &q) {
             int j = i + length - 1;
             subtree_exp[i][j] = INT_MAX;
             subtree_cost[i][j] = subtree_cost[i][j - 1] + p[j - 1] + q[j]; // TODO: check p[0..n-1]
+            ; // TODO: clear line;
             for (int r = i; r <= j; r++) {
                 double tmp = subtree_exp[i][r - 1] + subtree_exp[r + 1][j] + subtree_cost[i][j];
                 if (tmp < subtree_exp[i][j]) {
@@ -79,6 +80,15 @@ int **optimalBSTRootMatrix(std::vector<double> &p, std::vector<double> &q) {
         std::cout << std::endl;
     }
     std::cout << std::endl;
+    std::cout << std::endl;
+    std::cout << std::endl;
+
+    for (int i = 1; i <= 5; i++) {
+        for (int j = 1; j <= 5; j++) {
+            std::cout << root[i][j] << "   ";
+        }
+        std::cout << std::endl;
+    }
     std::cout << std::endl;
     std::cout << std::endl;
 
@@ -112,18 +122,8 @@ restoreOptimalBST(std::vector<DataType> &data, int **rootMatrix, int indexI, int
 template<typename DataType>
 BST<DataType> optimalBST(std::vector<DataType> &data, std::vector<double> &frequency,
                          std::vector<double> &frequency_f) { //TODO: rename frequency_f;
-    //assert((frequency.size() == data.size() == frequency_f.size() - 1) && "Invalid vectors");
 
     auto rootMatrix = optimalBSTRootMatrix(frequency, frequency_f);
-
-    for (int i = 1; i <= 5; i++) {
-        for (int j = 1; j <= 5; j++) {
-            std::cout << rootMatrix[i][j] << "   ";
-        }
-        std::cout << std::endl;
-    }
-    std::cout << std::endl;
-    std::cout << std::endl;
 
     BST<DataType> tree;
     tree.root = restoreOptimalBST<DataType>(data, rootMatrix, 1, data.size(), nullptr);
