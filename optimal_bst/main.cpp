@@ -1,3 +1,5 @@
+#include "bst.hpp"
+
 #include <iostream>
 
 int main() {

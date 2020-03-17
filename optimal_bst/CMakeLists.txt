@@ -3,4 +3,4 @@ project(optimal_bst)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(optimal_bst sqlite3.h sqlite3.c main.cpp)
+add_executable(optimal_bst sqlite3.h sqlite3.c main.cpp optimal_bst.hpp bst.hpp bst.hxx)
