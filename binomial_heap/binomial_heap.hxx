@@ -18,15 +18,18 @@ BinomialHeap<DataType>::~BinomialHeap() = default;
 
 template<typename DataType>
 void BinomialHeap<DataType>::printStep(BinomialNode<DataType> *node, int level) {
-    if (node == nullptr) return;
 
     std::cout << '|';
     for (int i = 0; i < level; i++) {
         std::cout << '\t' << '|';
     }
-    std::cout << *(node->data()) << " (degree: " << node->degree() << ")" << std::endl;
-    printStep(node->child, level + 1);
-    printStep(node->sibling, level);
+    if (!node) {
+        std::cout << '*' << std::endl;
+    } else {
+        std::cout << *(node->data()) << " (degree: " << node->degree() << ")" << std::endl;
+        printStep(node->child, level + 1);
+        printStep(node->sibling, level);
+    }
 }
 
 template<typename DataType>
