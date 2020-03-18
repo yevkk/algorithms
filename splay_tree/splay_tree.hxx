@@ -134,15 +134,18 @@ STNode<DataType> *SplayTree<DataType>::_predecessor(STNode<DataType> *node) {
 
 template<typename DataType>
 void SplayTree<DataType>::_printStep(STNode<DataType> *node, int level) {
-    if (!node) return;
-
     std::cout << '|';
     for (int i = 0; i < level; i++) {
         std::cout << '\t' << '|';
     }
-    std::cout << node->data << std::endl;
-    _printStep(node->left, level + 1);
-    _printStep(node->right, level + 1);
+
+    if (!node) {
+        std::cout << '*' << std::endl;
+    } else {
+        std::cout << node->data << std::endl;
+        _printStep(node->left, level + 1);
+        _printStep(node->right, level + 1);
+    }
 }
 
 template<typename DataType>
