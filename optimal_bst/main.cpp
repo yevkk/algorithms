@@ -3,14 +3,16 @@
 
 #include <iostream>
 
-int main() {
-    std::cout << "Hello, World!" << std::endl;
-    std::vector<double> p = {0.15, 0.10, 0.05, 0.10, 0.20};
-    std::vector<double> q = {0.05, 0.10, 0.05, 0.05, 0.05, 0.10};
+void example1() {
+    std::vector<double> p = {15, 10, 5, 10, 20};
+    std::vector<double> q = {5, 10, 5, 5, 5, 10};
     std::vector<int> data = {1, 2, 3, 4, 5};
 
-    BST<int> tree = optimalBST(data, p, q);
-    tree.print();
+    optimalBST(data, p, q).print();
+}
+
+int main() {
+    example1();
 
     return 0;
 }
