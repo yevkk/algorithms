@@ -100,9 +100,10 @@ int **optimalBSTRootMatrix(std::vector<double> &p, std::vector<double> &q) {
 template<typename DataType>
 BSTNode<DataType> *
 restoreOptimalBST(std::vector<DataType> &data, int **rootMatrix, int indexI, int indexJ, BSTNode<DataType> *parent) {
+    if (indexI < 1 || indexJ > data.size() || indexJ < indexI) return nullptr;
     if (indexI == indexJ) {
         auto node = new BSTNode<DataType>(data[indexI - 1]);
-        
+
         node->parent = parent;
         node->left = node->right = nullptr;
 
