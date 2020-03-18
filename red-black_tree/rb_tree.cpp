@@ -17,16 +17,19 @@ RBNode *RBTree::root() {
 }
 
 void RBTree::printStep(RBNode *node, int level) {
-    if (node == _nullNode) return;
-
     std::cout << '|';
     for (int i = 0; i < level; i++) {
         std::cout << '\t' << '|';
     }
-    std::cout << osRank(node) << "| ";
-    std::cout << *(node->data()) << "   (c:" << node->color() << ", s:" << node->size << ")" << std::endl;
-    printStep(node->left, level + 1);
-    printStep(node->right, level + 1);
+
+    if (node == _nullNode) {
+        std::cout << '*' << std::endl;
+    } else {
+        std::cout << osRank(node) << "| ";
+        std::cout << *(node->data()) << "   (c:" << node->color() << ", s:" << node->size << ")" << std::endl;
+        printStep(node->left, level + 1);
+        printStep(node->right, level + 1);
+    }
 }
 
 void RBTree::print() {
