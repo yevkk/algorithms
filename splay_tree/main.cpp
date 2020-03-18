@@ -71,6 +71,7 @@ void example2(int count = 10) {
 }
 
 //join trees
+//using int data for simplifying division of data on sets >x and <=x
 void example3(int count = 10) {
     int *nums1 = new int[count];
     int *nums2 = new int[count];

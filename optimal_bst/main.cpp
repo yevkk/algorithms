@@ -6,6 +6,7 @@
 #include <vector>
 #include <algorithm>
 
+//example form Cormen's book
 void example1() {
     std::vector<double> p = {15, 10, 5, 10, 20};
     std::vector<double> q = {5, 10, 5, 5, 5, 10};
@@ -14,6 +15,8 @@ void example1() {
     optimalBST(data, p, q).print();
 }
 
+//builds optimal bst using all elements from db;
+//considering probability of searching all values from 60.0 to 100.0 (one digit after comma) as equal
 void example2() {
     auto students = getStudentsFromDB("../../department.db");
     std::vector<Student> data;
@@ -34,7 +37,7 @@ void example2() {
     q[q.size() - 1] = (1000 - 10 * data[data.size() - 1].getAveragePoint()) / (1000 - 599);
 
 
-    //Display values:
+    //Display values of data and probabilities:
 
 //    for (auto &e:data) {
 //        std::cout << e << std::endl;
@@ -55,7 +58,7 @@ void example2() {
 //        sum += e;
 //    }
 //    std::cout << std::endl;
-//    std::cout << "SUM of : " << sum << std::endl;
+//    std::cout << "SUM of all probabilities: " << sum << std::endl;
 
     // ================
 

@@ -27,6 +27,10 @@ inline std::ostream &operator<<(std::ostream &os, std::pair<int, int> &pair) {
     return os;
 }
 
+//1) builds a heap with 10 elements from db,
+//2) decreases heap.head()->sibling->child->sibling->data() to value 50
+//3) deletes heap.head()->sibling->child->sibling
+//displaying tree after each step
 void example1() {
     auto students = getStudentsFromDB("../../department.db");
     BinomialHeap<Student> heap(nullptr);
@@ -48,16 +52,19 @@ void example1() {
     std::cout << std::endl;
 }
 
+//builds and displays all a heap with all elements from db;
 void example2() {
     auto students = getStudentsFromDB("../../department.db");
     BinomialHeap<Student> heap1(nullptr);
-    for (int i = 0; i < 50; i++) {
+    for (int i = 0; i < students.size(); i++) {
         insertNode(heap1, new BinomialNode<Student>(students[i]));
     }
     heap1.print();
     std::cout << std::endl;
 };
 
+
+//binomial heap as queue
 void example3(int count) {
     BinomialHeap<std::pair<int, int>> heapOfPairs;
     for (int i = 0; i < count; i++) {
@@ -73,7 +80,7 @@ void example3(int count) {
 }
 
 int main() {
-    example3(20);
+    example1();
 
     return 0;
 }
