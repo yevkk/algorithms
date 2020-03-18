@@ -67,10 +67,10 @@ restoreOptimalBST(std::vector<DataType> &data, int **rootMatrix, int indexI, int
 }
 
 template<typename DataType>
-BST<DataType> optimalBST(std::vector<DataType> &data, std::vector<double> &frequency,
-                         std::vector<double> &frequency_f) { //TODO: rename frequency_f;
+BST<DataType> optimalBST(std::vector<DataType> &data, std::vector<double> &probability,
+                         std::vector<double> &dummy_probability) {
 
-    auto rootMatrix = optimalBSTRootMatrix(frequency, frequency_f);
+    auto rootMatrix = optimalBSTRootMatrix(probability, dummy_probability);
 
     BST<DataType> tree;
     tree.root = restoreOptimalBST<DataType>(data, rootMatrix, 1, data.size(), nullptr);
