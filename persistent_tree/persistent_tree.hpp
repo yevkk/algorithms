@@ -52,8 +52,11 @@ public:
 
     bool includes(const DataType &key);
 
+    void insert(DataType *key_ptr);
+
 
 };
 
+#include "persistent_tree.hxx"
 
 #endif //PERSISTENT_TREE_PERSISTENT_TREE_HPP

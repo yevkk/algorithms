@@ -1,4 +1,5 @@
-#include "persistent_tree.hpp"
+#ifndef PERSISTENT_TREE_PERSISTENT_TREE_HXX
+#define PERSISTENT_TREE_PERSISTENT_TREE_HXX
 
 #include <cassert>
 
@@ -15,7 +16,7 @@ DataType *Node<DataType>::data() {
 
 template<typename DataType>
 Node<DataType> *PersistentTree<DataType>::_head(unsigned index) {
-    assert(index < _head_vector.size - 1 && "Out of range");
+    assert(index <= _head_vector.size - 1 && "Out of range");
     return _head_vector[index];
 }
 
@@ -40,17 +41,16 @@ void PersistentTree<DataType>::_printStep(OStream &output, Node<DataType> *node,
     if (!node) {
         output << '*' << std::endl;
     } else {
-        output << osRank(node) << "| ";
-        output << *(node->data()) << "   (c:" << node->color() << ", s:" << node->size << ")" << std::endl;
-        printStep(output, node->left, level + 1);
-        printStep(output, node->right, level + 1);
+        output << *(node->data()) << std::endl;
+        _printStep(output, node->left, level + 1);
+        _printStep(output, node->right, level + 1);
     }
 }
 
 template<typename DataType>
 template<typename OStream>
 void PersistentTree<DataType>::printVersion(OStream &output, unsigned index) {
-    assert(index < _head_vector.size - 1 && "Out of range");
+    assert(index <= _head_vector.size() - 1 && "Out of range");
     _printStep(output, _head_vector[index], 0);
 }
 
@@ -117,7 +117,7 @@ template<typename DataType>
 Node<DataType> *PersistentTree<DataType>::_subtreeInsert(Node<DataType> *subtree_root, DataType *key_ptr) {
     if (!subtree_root) return new Node<DataType>(key_ptr);
 
-    Node<DataType> *updated_root{subtree_root->data()};
+    Node<DataType> *updated_root = new Node<DataType>(subtree_root->data());
     if (*key_ptr < *(subtree_root->data())) {
         updated_root->left = _subtreeInsert(subtree_root->left, key_ptr);
         updated_root->right = subtree_root->right;
@@ -129,6 +129,9 @@ Node<DataType> *PersistentTree<DataType>::_subtreeInsert(Node<DataType> *subtree
     return updated_root;
 }
 
+template<typename DataType>
+void PersistentTree<DataType>::insert(DataType *key_ptr) {
+    _head_vector.push_back(_subtreeInsert(_head_vector.back(), key_ptr));
+}
 
-
-
+#endif //PERSISTENT_TREE_PERSISTENT_TREE_HXX
