@@ -2,6 +2,9 @@
 #define PERSISTENT_TREE_PERSISTENT_TREE_HXX
 
 #include <cassert>
+#include <sstream>
+#include "persistent_tree.hpp"
+
 
 template<typename DataType>
 Node<DataType>::Node(DataType *data) :
@@ -15,7 +18,12 @@ DataType *Node<DataType>::data() {
 };
 
 template<typename DataType>
-Node<DataType> *PersistentTree<DataType>::_head(unsigned index) {
+void Node<DataType>::setData(DataType *data) {
+    _data = data;
+};
+
+template<typename DataType>
+Node<DataType> *PersistentTree<DataType>::head(unsigned index) {
     assert(index <= _head_vector.size - 1 && "Out of range");
     return _head_vector[index];
 }
@@ -23,6 +31,7 @@ Node<DataType> *PersistentTree<DataType>::_head(unsigned index) {
 template<typename DataType>
 PersistentTree<DataType>::PersistentTree() {
     _head_vector.push_back(nullptr);
+    change_log.push_back("Tree created");
 }
 
 template<typename DataType>
@@ -117,7 +126,7 @@ template<typename DataType>
 Node<DataType> *PersistentTree<DataType>::_subtreeInsert(Node<DataType> *subtree_root, DataType *key_ptr) {
     if (!subtree_root) return new Node<DataType>(key_ptr);
 
-    Node<DataType> *updated_root = new Node<DataType>(subtree_root->data());
+    auto updated_root = new Node<DataType>(subtree_root->data());
     if (*key_ptr < *(subtree_root->data())) {
         updated_root->left = _subtreeInsert(subtree_root->left, key_ptr);
         updated_root->right = subtree_root->right;
@@ -132,6 +141,64 @@ Node<DataType> *PersistentTree<DataType>::_subtreeInsert(Node<DataType> *subtree
 template<typename DataType>
 void PersistentTree<DataType>::insert(DataType *key_ptr) {
     _head_vector.push_back(_subtreeInsert(_head_vector.back(), key_ptr));
+    std::stringstream str;
+    str << "Inserted item " << *key_ptr << ";";
+    change_log.push_back(str.str());
+}
+
+template<typename DataType>
+Node<DataType> *PersistentTree<DataType>::_subtreeDelete(Node<DataType> *subtree_root, DataType *key_ptr) {
+    if (!subtree_root) return subtree_root;
+
+    auto updated_root = new Node<DataType>(subtree_root->data());
+    if (*key_ptr < *(subtree_root->data())) {
+        updated_root->left = _subtreeDelete(subtree_root->left, key_ptr);
+        updated_root->right = subtree_root->right;
+    } else if (*key_ptr > *(subtree_root->data())) {
+        updated_root->left = subtree_root->left;
+        updated_root->right = _subtreeDelete(subtree_root->right, key_ptr);
+    } else {
+        if (!subtree_root->left) {
+            auto tmp = subtree_root->right;
+            delete (subtree_root);
+            return tmp;
+        }
+
+        if (!subtree_root->right) {
+            auto tmp = subtree_root->left;
+            delete (subtree_root);
+            return tmp;
+        }
+
+        auto tmp = _subtreeMin(subtree_root->right);
+        updated_root->setData(tmp->data());
+        updated_root->right = _subtreeDelete(subtree_root->right, tmp->data());
+        updated_root->left = _subtreeDelete(subtree_root->left, tmp->data());
+    }
+
+    return updated_root;
+}
+
+template<typename DataType>
+void PersistentTree<DataType>::deleteNode(DataType *key_ptr) {
+    _head_vector.push_back(_subtreeDelete(_head_vector.back(), key_ptr));
+    std::stringstream str;
+    str << "Deleted item " << *key_ptr << ";";
+    change_log.push_back(str.str());
+}
+
+template<typename DataType>
+template<typename OStream>
+void PersistentTree<DataType>::printChangeLog(OStream &output, bool backwards) {
+    output << "CHANGE LOG:\n";
+
+    int index = backwards ? currentVersion() : 0;
+    int termination_value = backwards ? -1 : currentVersion() + 1;
+
+    while (index != termination_value) {
+        output << "[VERSION " << index << "]\t" << change_log[index] << '\n';
+        backwards ? index-- : index++;
+    }
 }
 
 #endif //PERSISTENT_TREE_PERSISTENT_TREE_HXX

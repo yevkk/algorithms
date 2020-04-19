@@ -15,14 +15,15 @@ public:
     explicit Node(DataType *data);
 
     DataType *data();
+
+    void setData(DataType *data);
 };
 
 template<typename DataType>
 class PersistentTree {
 private:
     std::vector<Node<DataType> *> _head_vector;
-
-    Node<DataType> *_head(unsigned index = 0);
+    std::vector<std::string> change_log;
 
     template<typename OStream>
     void _printStep(OStream &output, Node<DataType> *node, int level);
@@ -35,8 +36,12 @@ private:
 
     Node<DataType> *_subtreeInsert(Node<DataType> *subtree_root, DataType *key_ptr);
 
+    Node<DataType> *_subtreeDelete(Node<DataType> *subtree_root, DataType *key_ptr);
+
 public:
     PersistentTree();
+
+    Node<DataType> *head(unsigned index = 0);
 
     unsigned currentVersion();
 
@@ -54,7 +59,10 @@ public:
 
     void insert(DataType *key_ptr);
 
+    void deleteNode(DataType *key_ptr);
 
+    template<typename OStream>
+    void printChangeLog(OStream &output, bool backwards = false);
 };
 
 #include "persistent_tree.hxx"
