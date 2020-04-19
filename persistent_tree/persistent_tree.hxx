@@ -78,6 +78,20 @@ void PersistentTree<DataType>::printAll(OStream &output, bool backwards) {
 }
 
 template<typename DataType>
+template<typename OStream>
+void PersistentTree<DataType>::printChangeLog(OStream &output, bool backwards) {
+    output << "CHANGE LOG:\n";
+
+    int index = backwards ? currentVersion() : 0;
+    int termination_value = backwards ? -1 : currentVersion() + 1;
+
+    while (index != termination_value) {
+        output << "[VERSION " << index << "]\t" << change_log[index] << '\n';
+        backwards ? index-- : index++;
+    }
+}
+
+template<typename DataType>
 Node<DataType> *PersistentTree<DataType>::_subtreeMin(Node<DataType> *subtree_root) {
     Node<DataType> *ptr = subtree_root;
     while (ptr->left) {
@@ -188,17 +202,18 @@ void PersistentTree<DataType>::deleteNode(DataType *key_ptr) {
 }
 
 template<typename DataType>
-template<typename OStream>
-void PersistentTree<DataType>::printChangeLog(OStream &output, bool backwards) {
-    output << "CHANGE LOG:\n";
+void PersistentTree<DataType>::_subtreeClear(Node<DataType> *subtree_root) {
+    if(!subtree_root) return;
+    _subtreeClear(subtree_root->left);
+    _subtreeClear(subtree_root->right);
+    delete(subtree_root);
+}
 
-    int index = backwards ? currentVersion() : 0;
-    int termination_value = backwards ? -1 : currentVersion() + 1;
-
-    while (index != termination_value) {
-        output << "[VERSION " << index << "]\t" << change_log[index] << '\n';
-        backwards ? index-- : index++;
-    }
+template<typename DataType>
+void PersistentTree<DataType>::clear() {
+    _subtreeClear(_head_vector.back());
+    _head_vector.push_back(nullptr);
+    change_log.push_back("Tree cleared;");
 }
 
 #endif //PERSISTENT_TREE_PERSISTENT_TREE_HXX

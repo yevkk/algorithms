@@ -38,6 +38,8 @@ private:
 
     Node<DataType> *_subtreeDelete(Node<DataType> *subtree_root, DataType *key_ptr);
 
+    void _subtreeClear(Node<DataType> *subtree_root);
+
 public:
     PersistentTree();
 
@@ -51,6 +53,9 @@ public:
     template<typename OStream>
     void printAll(OStream &output, bool backwards = false);
 
+    template<typename OStream>
+    void printChangeLog(OStream &output, bool backwards = false);
+
     DataType min();
 
     DataType max();
@@ -61,8 +66,7 @@ public:
 
     void deleteNode(DataType *key_ptr);
 
-    template<typename OStream>
-    void printChangeLog(OStream &output, bool backwards = false);
+    void clear();
 };
 
 #include "persistent_tree.hxx"
