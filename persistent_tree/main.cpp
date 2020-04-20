@@ -4,21 +4,21 @@
 #include <iostream>
 
 void example1() {
-    PersistentTree<int> tree;
-    int a[] = {1, 2, 3, 4, 5, 6};
-    tree.insert(a + 1);
-    tree.insert(a + 3);
-    tree.insert(a + 2);
-    tree.insert(a + 0);
-    tree.insert(a + 4);
+      PersistentTree<int> tree;
+      int a[] = {1, 2, 3, 4, 5, 6};
+      tree.insert(a + 1);
+      tree.insert(a + 3);
+      tree.insert(a + 2);
+      tree.insert(a + 0);
+      tree.insert(a + 4);
 
-    tree.deleteNode(a + 1);
-    tree.insert(a + 5);
-    tree.deleteNode(a + 4);
-    std::cout << std::endl << std::endl;
-    tree.printChangeLog(std::cout);
-    std::cout << std::endl << std::endl;
-    tree.printAll(std::cout);
+      tree.deleteNode(a + 1);
+      tree.insert(a + 5);
+      tree.deleteNode(a + 4);
+      std::cout << std::endl << std::endl;
+      tree.printChangeLog(std::cout);
+      std::cout << std::endl << std::endl;
+      tree.printAll(std::cout);
 }
 
 void example2() {
@@ -52,7 +52,6 @@ void example3() {
     tree.deleteNode(students[12]);
     tree.deleteNode(students[21]);
     tree.deleteNode(students[7]);
-
     tree.clear();
     tree.insert(students[4]);
 
@@ -62,7 +61,7 @@ void example3() {
 }
 
 int main() {
-    example3();
+    example1();
 
     return 0;
 }

@@ -2,6 +2,7 @@
 #define PERSISTENT_TREE_PERSISTENT_TREE_HPP
 
 #include <vector>
+#include <memory>
 #include <ostream>
 
 template<typename DataType>
@@ -9,10 +10,11 @@ class Node {
 private:
     DataType *_data;
 public:
-    Node *left;
-    Node *right;
+    std::shared_ptr<Node> left;
+    std::shared_ptr<Node> right;
 
     explicit Node(DataType *data);
+    ~Node();
 
     DataType *data();
 
@@ -22,28 +24,26 @@ public:
 template<typename DataType>
 class PersistentTree {
 private:
-    std::vector<Node<DataType> *> _head_vector;
+    std::vector<std::shared_ptr<Node<DataType>>> _head_vector;
     std::vector<std::string> change_log;
 
     template<typename OStream>
-    void _printStep(OStream &output, Node<DataType> *node, int level);
+    void _printStep(OStream &output, std::shared_ptr<Node<DataType>> node, int level);
 
-    Node<DataType> *_subtreeMin(Node<DataType> *subtree_root);
+    std::shared_ptr<Node<DataType>> _subtreeMin(std::shared_ptr<Node<DataType>> subtree_root);
 
-    Node<DataType> *_subtreeMax(Node<DataType> *subtree_root);
+    std::shared_ptr<Node<DataType>> _subtreeMax(std::shared_ptr<Node<DataType>> subtree_root);
 
-    Node<DataType> *_subtreeSearch(Node<DataType> *subtree_root, const DataType &key);
+    std::shared_ptr<Node<DataType>> _subtreeSearch(std::shared_ptr<Node<DataType>> subtree_root, const DataType &key);
 
-    Node<DataType> *_subtreeInsert(Node<DataType> *subtree_root, DataType *key_ptr);
+    std::shared_ptr<Node<DataType>> _subtreeInsert(std::shared_ptr<Node<DataType>> subtree_root, DataType *key_ptr);
 
-    Node<DataType> *_subtreeDelete(Node<DataType> *subtree_root, DataType *key_ptr);
-
-    void _subtreeClear(Node<DataType> *subtree_root);
+    std::shared_ptr<Node<DataType>> _subtreeDelete(std::shared_ptr<Node<DataType>> subtree_root, DataType *key_ptr);
 
 public:
     PersistentTree();
 
-    Node<DataType> *head(unsigned index = 0);
+    std::shared_ptr<Node<DataType>> head(unsigned index = 0);
 
     unsigned currentVersion();
 
