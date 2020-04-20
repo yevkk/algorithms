@@ -16,12 +16,31 @@ void example1() {
     tree.insert(a + 5);
     tree.deleteNode(a + 4);
     std::cout << std::endl << std::endl;
-    tree.printAll(std::cout);
-    std::cout << std::endl << std::endl;
     tree.printChangeLog(std::cout);
+    std::cout << std::endl << std::endl;
+    tree.printAll(std::cout);
 }
 
 void example2() {
+    auto students = getStudentsFromDB("../../department.db");
+    PersistentTree<Student> tree;
+
+    for (auto &item:students) {
+        tree.insert(item);
+    }
+    tree.deleteNode(students[36]);
+    tree.deleteNode(students[43]);
+    tree.deleteNode(students[12]);
+    tree.deleteNode(students[21]);
+    tree.deleteNode(students[7]);
+    tree.insert(students[4]);
+
+    tree.printAll(std::cout);
+    std::cout << std::endl << std::endl;
+    tree.printChangeLog(std::cout, true);
+}
+
+void example3() {
     auto students = getStudentsFromDB("../../department.db");
     PersistentTree<Student> tree;
 
@@ -43,7 +62,7 @@ void example2() {
 }
 
 int main() {
+    example3();
 
-    example1();
     return 0;
 }

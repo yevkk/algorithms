@@ -173,21 +173,17 @@ Node<DataType> *PersistentTree<DataType>::_subtreeDelete(Node<DataType> *subtree
         updated_root->right = _subtreeDelete(subtree_root->right, key_ptr);
     } else {
         if (!subtree_root->left) {
-            auto tmp = subtree_root->right;
-            delete (subtree_root);
-            return tmp;
+            return subtree_root->right;;
         }
 
         if (!subtree_root->right) {
-            auto tmp = subtree_root->left;
-            delete (subtree_root);
-            return tmp;
+            return subtree_root->left;;
         }
 
         auto tmp = _subtreeMin(subtree_root->right);
         updated_root->setData(tmp->data());
         updated_root->right = _subtreeDelete(subtree_root->right, tmp->data());
-        updated_root->left = _subtreeDelete(subtree_root->left, tmp->data());
+        updated_root->left = subtree_root->left;
     }
 
     return updated_root;
@@ -203,15 +199,19 @@ void PersistentTree<DataType>::deleteNode(DataType *key_ptr) {
 
 template<typename DataType>
 void PersistentTree<DataType>::_subtreeClear(Node<DataType> *subtree_root) {
-    if(!subtree_root) return;
-    _subtreeClear(subtree_root->left);
-    _subtreeClear(subtree_root->right);
-    delete(subtree_root);
+    if (subtree_root) {
+        if (dynamic_cast<Node<DataType> *>(subtree_root->left)) _subtreeClear(subtree_root->left);
+        if (dynamic_cast<Node<DataType> *>(subtree_root->right)) _subtreeClear(subtree_root->right);
+        delete (subtree_root);
+    }
 }
 
 template<typename DataType>
 void PersistentTree<DataType>::clear() {
-    _subtreeClear(_head_vector.back());
+    for (auto &item: _head_vector) {
+        _subtreeClear(item);
+    }
+    _head_vector.clear();
     _head_vector.push_back(nullptr);
     change_log.push_back("Tree cleared;");
 }
