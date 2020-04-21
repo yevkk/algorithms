@@ -7,8 +7,8 @@ template<typename DataType>
 BPlusNode<DataType>::BPlusNode() :
         leaf{false},
         size{0},
-        data{},
-        children{},
+        data(),
+        children(),
         next_leaf{nullptr},
         prev_leaf{nullptr},
         parent{nullptr} {}
@@ -23,14 +23,75 @@ BPlusTree<DataType>::BPlusTree(unsigned minimum_degree) :
 }
 
 template<typename DataType>
+template<typename OStream>
+void BPlusTree<DataType>::_printStep(OStream &output, std::shared_ptr<BPlusNode<DataType>> node, int level) {
+    output << '|';
+    for (int i = 0; i < level; i++) {
+        output << '\t' << '|';
+    }
+
+    if (!node.get()) {
+        output << "*\n";
+    } else {
+        output << "Data:\n";
+        for (auto &item:node->data) {
+            output << '|';
+            for (int i = 0; i < level; i++) {
+                output << '\t' << '|';
+            }
+            output << item << "\n";
+        }
+
+        if (!node->leaf) {
+            output << '|';
+            for (int i = 0; i < level; i++) {
+                output << '\t' << '|';
+            }
+            output << "Children:\n";
+            for (auto &item:node->children) {
+                _printStep(output, item, level + 1);
+            }
+        }
+    }
+    output << '|';
+    for (int i = 0; i < level; i++) {
+        output << '\t' << '|';
+    }
+    output << "=====\n";
+}
+
+template<typename DataType>
+template<typename OStream>
+void BPlusTree<DataType>::print(OStream &output) {
+    _printStep(output, _root, 0);
+}
+
+template<typename DataType>
+template<typename OStream>
+void BPlusTree<DataType>::printSorted(OStream &output) {
+    Node_ptr ptr = _root;
+    while (!ptr->leaf) {
+        ptr = ptr->children[0];
+    }
+
+    int i = 0;
+    while (ptr.get()) {
+        for (auto &item: ptr->data) {
+            output << ++i << ") " << item << "\n";
+        }
+        ptr = ptr->next_leaf;
+    }
+}
+
+template<typename DataType>
 void BPlusTree<DataType>::_split_node(std::shared_ptr<BPlusNode<DataType>> node) {
-    unsigned split_index = (node->size / 2) + 1;
+    unsigned split_index = (node->size / 2);
     std::vector<DataType> data_first_part(node->data.begin(), node->data.begin() + split_index);
     std::vector<DataType> data_second_part(node->data.begin() + split_index, node->data.end());
 
     std::vector<Node_ptr> children_first_part(node->children.begin(), node->children.begin() + split_index + 1);
     std::vector<Node_ptr> children_second_part(node->children.begin() + split_index + 1, node->children.end());
-    children_second_part.push_front(nullptr);
+    children_second_part.insert(children_second_part.begin(), nullptr);
 
     node->data = data_first_part;
     node->children = children_first_part;
@@ -55,20 +116,29 @@ void BPlusTree<DataType>::_split_node(std::shared_ptr<BPlusNode<DataType>> node)
         new_parent->size = 1;
         new_parent->data.push_back(data_second_part.front());
         new_parent->children = {node, new_node};
-        node->parent = new_node->parent = new_parent;
+        node->parent = new_parent;
+
+        _root = new_parent;
     } else {
         Node_ptr parent = node->parent;
-        new_node->parent = parent;
         unsigned index = 0; //max index of element, smaller than element to insert
-        while (data_second_part.front() > parent->data[index]) {
+        while (index < parent->size && data_second_part.front() > parent->data[index]) {
             index++;
         }
 
-        parent->data.insert(parent->data.begin() + index + 1, data_second_part.front());
+        parent->data.insert(parent->data.begin() + index, data_second_part.front());
         parent->size++;
+        parent->children.insert(parent->children.begin() + index + 1, new_node);
 
-        if (index < parent->size && parent->size > _max_node_fill) {
+        if (parent->size > _max_node_fill) {
             _split_node(parent);
+        }
+    }
+
+    new_node->parent = node->parent;
+    for (auto &item: new_node->children) {
+        if (item.get()) {
+            item->parent = new_node;
         }
     }
 }
@@ -81,15 +151,21 @@ BPlusTree<DataType>::_subtree_insert(std::shared_ptr<BPlusNode<DataType>> subtre
         while (index < subtree_root->size && key > subtree_root->data[index]) {
             index++;
         }
-
-        subtree_root->data.insert(subtree_root->data.begin() + index + 1, key);
+        if (subtree_root->data.empty()) {
+            subtree_root->data.push_back(key);
+            subtree_root->children.push_back(Node_ptr(nullptr));
+            subtree_root->children.push_back(Node_ptr(nullptr));
+        } else {
+            subtree_root->data.insert(subtree_root->data.begin() + index, key);
+            subtree_root->children.push_back(Node_ptr(nullptr));
+        }
         subtree_root->size++;
 
         if (subtree_root->size > _max_node_fill) {
-            return _split_node(subtree_root);
-        } else {
-            return {subtree_root, index + 1};
+            _split_node(subtree_root);
         }
+
+        return {subtree_root, index};
 
     } else {
         unsigned index = 0; //index of child where key should be insert
@@ -97,10 +173,15 @@ BPlusTree<DataType>::_subtree_insert(std::shared_ptr<BPlusNode<DataType>> subtre
             index++;
         }
 
-        _subtree_insert(subtree_root->children[index], index, key);
+        _subtree_insert(subtree_root->children[index], key);
     }
 
     return std::pair<Node_ptr, unsigned int>();
+}
+
+template<typename DataType>
+void BPlusTree<DataType>::insert(DataType key) {
+    _subtree_insert(_root, key);
 }
 
 

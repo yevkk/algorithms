@@ -29,6 +29,9 @@ private:
     unsigned _max_node_fill;
     Node_ptr _root;
 
+    template<typename OStream>
+    void _printStep(OStream &output, std::shared_ptr<BPlusNode<DataType>> node, int level);
+
     void _split_node(Node_ptr node);
 
     std::pair<Node_ptr, unsigned>
@@ -36,6 +39,14 @@ private:
 
 public:
     explicit BPlusTree(unsigned minimum_degree = 2);
+
+    template<typename OStream>
+    void print(OStream &output);
+
+    template<typename OStream>
+    void printSorted(OStream &output);
+
+    void insert(DataType key);
 
 };
 
