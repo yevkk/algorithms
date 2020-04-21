@@ -29,7 +29,7 @@ private:
     unsigned _max_node_fill;
     Node_ptr _root;
 
-    std::pair<Node_ptr, unsigned> _split_node(Node_ptr node);
+    void _split_node(Node_ptr node);
 
     std::pair<Node_ptr, unsigned>
     _subtree_insert(std::shared_ptr<BPlusNode<DataType>> subtree_root, const DataType &key);
