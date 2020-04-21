@@ -10,10 +10,11 @@ class BPlusNode {
 public:
     bool leaf;
     unsigned size;
-    std::vector<DataType *> data;
+    std::vector<DataType> data;
     std::vector<Node_ptr> children;
     Node_ptr next_leaf;
     Node_ptr prev_leaf;
+    Node_ptr parent;
 
     BPlusNode();
 };
@@ -28,8 +29,14 @@ private:
     unsigned _max_node_fill;
     Node_ptr _root;
 
+    std::pair<Node_ptr, unsigned> _split_node(Node_ptr node);
+
+    std::pair<Node_ptr, unsigned>
+    _subtree_insert(std::shared_ptr<BPlusNode<DataType>> subtree_root, const DataType &key);
+
 public:
     explicit BPlusTree(unsigned minimum_degree = 2);
+
 };
 
 
