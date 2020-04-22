@@ -30,12 +30,15 @@ private:
     Node_ptr _root;
 
     template<typename OStream>
-    void _printStep(OStream &output, std::shared_ptr<BPlusNode<DataType>> node, int level);
+    void _printStep(OStream &output, Node_ptr node, int level);
+
+    std::pair<Node_ptr, unsigned>
+    _subtree_search(Node_ptr subtree_root, const DataType &key);
 
     void _split_node(Node_ptr node);
 
     std::pair<Node_ptr, unsigned>
-    _subtree_insert(std::shared_ptr<BPlusNode<DataType>> subtree_root, const DataType &key);
+    _subtree_insert(Node_ptr subtree_root, const DataType &key);
 
 public:
     explicit BPlusTree(unsigned minimum_degree = 2);
@@ -46,7 +49,9 @@ public:
     template<typename OStream>
     void printSorted(OStream &output);
 
-    void insert(DataType key);
+    void insert(const DataType &key);
+
+    bool includes(const DataType &key);
 
 };
 

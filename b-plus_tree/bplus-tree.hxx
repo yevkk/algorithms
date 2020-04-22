@@ -2,6 +2,7 @@
 #define B_PLUS_TREE_BPLUS_TREE_HXX
 
 #include "bplus_tree.hpp"
+#include <algorithm>
 
 template<typename DataType>
 BPlusNode<DataType>::BPlusNode() :
@@ -84,6 +85,30 @@ void BPlusTree<DataType>::printSorted(OStream &output) {
 }
 
 template<typename DataType>
+std::pair<std::shared_ptr<BPlusNode<DataType>>, unsigned>
+BPlusTree<DataType>::_subtree_search(std::shared_ptr<BPlusNode<DataType>> subtree_root, const DataType &key) {
+    if (subtree_root->leaf) {
+        auto it = std::find(subtree_root->data.begin(), subtree_root->data.end(), key);
+        if (it != subtree_root->data.end()) {
+            return {subtree_root, std::distance(subtree_root->data.begin(), it)};
+        } else {
+            return {nullptr, 0};
+        }
+    } else {
+        unsigned index = 0;
+        while (index < subtree_root->size && key >= subtree_root->data[index]) {
+            index++;
+        }
+        return _subtree_search(subtree_root->children[index], key);
+    }
+}
+
+template<typename DataType>
+bool BPlusTree<DataType>::includes(const DataType &key) {
+    return _subtree_search(_root, key).first.get();
+}
+
+template<typename DataType>
 void BPlusTree<DataType>::_split_node(std::shared_ptr<BPlusNode<DataType>> node) {
     unsigned split_index = (node->size / 2);
     std::vector<DataType> data_first_part(node->data.begin(), node->data.begin() + split_index);
@@ -137,8 +162,6 @@ void BPlusTree<DataType>::_split_node(std::shared_ptr<BPlusNode<DataType>> node)
     }
 
 
-
-
     if (node->next_leaf.get()) {
         new_node->next_leaf = node->next_leaf;
         node->next_leaf->prev_leaf = new_node;
@@ -148,7 +171,7 @@ void BPlusTree<DataType>::_split_node(std::shared_ptr<BPlusNode<DataType>> node)
 }
 
 template<typename DataType>
-std::pair<std::shared_ptr<BPlusNode<DataType>>, unsigned int>
+std::pair<std::shared_ptr<BPlusNode<DataType>>, unsigned>
 BPlusTree<DataType>::_subtree_insert(std::shared_ptr<BPlusNode<DataType>> subtree_root, const DataType &key) {
     if (subtree_root->leaf) {
         unsigned index = 0; //max index of element, smaller than key
@@ -173,7 +196,7 @@ BPlusTree<DataType>::_subtree_insert(std::shared_ptr<BPlusNode<DataType>> subtre
 
     } else {
         unsigned index = 0; //index of child where key should be insert
-        while (index < subtree_root->size && key > subtree_root->data[index]) {
+        while (index < subtree_root->size && key >= subtree_root->data[index]) {
             index++;
         }
 
@@ -184,9 +207,8 @@ BPlusTree<DataType>::_subtree_insert(std::shared_ptr<BPlusNode<DataType>> subtre
 }
 
 template<typename DataType>
-void BPlusTree<DataType>::insert(DataType key) {
+void BPlusTree<DataType>::insert(const DataType &key) {
     _subtree_insert(_root, key);
 }
-
 
 #endif //B_PLUS_TREE_BPLUS_TREE_HXX
