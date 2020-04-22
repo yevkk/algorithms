@@ -211,4 +211,60 @@ void BPlusTree<DataType>::insert(const DataType &key) {
     _subtree_insert(_root, key);
 }
 
+/*
+ * @note considering key exists in node's data
+ */
+template<typename DataType>
+void BPlusTree<DataType>::_remove_from_node(BPlusTree::Node_ptr node, const DataType &key) {
+    unsigned index = std::distance(node->data.begin(), std::find(node->data.begin(), node->data.end(), key));
+    node->data.erase(node->data.begin() + index);
+    node->children.pop_back(); //leaf children are equal to nullptr;
+    node->size--;
+
+    //termination conditions
+    if (node == _root && node->size == 0) {
+        _root = node->children[0];
+        return;
+    }
+    if (node->size >= _min_node_fill || node == _root) return;
+
+
+    auto parent = node->parent;
+    unsigned child_index = std::distance(parent->data.begin(),
+                                         std::find_if(parent->data.begin(), parent->data.end(),
+                                                      [&key](const DataType &item) { return item > key; }));
+
+    auto left_sib = (child_index != 0) ? parent->children[child_index - 1] : nullptr;
+    auto right_sib = (child_index < parent->size) ? parent->children[child_index + 1] : nullptr;
+
+    if (left_sib.get() && left_sib->size - 1 >= _min_node_fill) {
+        //take max element from left_sib;
+        return;
+    }
+
+    if (right_sib.get() && right_sib->size - 1 >= _min_node_fill) {
+        //take min element from right_sib;
+        return;
+    }
+
+    if (left_sib.get()){
+        //merge node with left_sib; recursively delete corresponding constraint element from parent;
+        return;
+    }
+
+    if (right_sib.get()){
+        //merge node with right_sib; recursively delete corresponding constraint element from parent;
+        return;
+    }
+}
+
+
+template<typename DataType>
+void BPlusTree<DataType>::remove(const DataType &key) {
+    auto[node, index] = _subtree_search(_root, key);
+    if (!node) return;
+
+    _remove_from_node(node, key);
+}
+
 #endif //B_PLUS_TREE_BPLUS_TREE_HXX

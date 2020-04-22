@@ -40,6 +40,8 @@ private:
     std::pair<Node_ptr, unsigned>
     _subtree_insert(Node_ptr subtree_root, const DataType &key);
 
+    void _remove_from_node(Node_ptr node, const DataType &key);
+
 public:
     explicit BPlusTree(unsigned minimum_degree = 2);
 
@@ -49,9 +51,11 @@ public:
     template<typename OStream>
     void printSorted(OStream &output);
 
+    bool includes(const DataType &key);
+
     void insert(const DataType &key);
 
-    bool includes(const DataType &key);
+    void remove(const DataType &key);
 
 };
 
