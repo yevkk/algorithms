@@ -40,7 +40,7 @@ private:
     std::pair<Node_ptr, unsigned>
     _subtree_insert(Node_ptr subtree_root, const DataType &key);
 
-    void _remove_from_node(Node_ptr &node, unsigned index);
+    void _remove_from_node(Node_ptr node, unsigned index);
 
 public:
     explicit BPlusTree(unsigned minimum_degree = 2);

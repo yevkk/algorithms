@@ -4,7 +4,7 @@
 #include <iostream>
 #include <algorithm>
 
-void exampleSimple() {
+void exampleInt() {
     int size = 20;
     std::vector<int> data(size);
 
@@ -30,7 +30,7 @@ void exampleSimple() {
     std::shuffle(data.begin(), data.end(), g);
 
     for(auto &item: data) {
-        std::cout << "DELETING " << item << "\n";
+        std::cout << "DELETE " << item << "\n";
         tree.remove(item);
         tree.print(std::cout);
         std::cout << std::endl << std::endl;
@@ -52,8 +52,8 @@ void exampleStudents() {
     std::mt19937 g(rd());
     std::shuffle(students.begin(), students.end(), g);
 
-    for (int i = 0; i < 15; i++) {
-        std::cout << "DELETING " << *students[i] << "\n";
+    for (int i = 0; i < 50; i++) {
+        std::cout << "DELETE " << *students[i] << "\n";
         tree.remove(*students[i]);
     }
 
@@ -69,7 +69,7 @@ void exampleStudents() {
 }
 
 int main() {
-    exampleSimple();
+    exampleStudents();
 
     return 0;
 }
