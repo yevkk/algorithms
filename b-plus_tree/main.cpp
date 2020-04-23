@@ -4,62 +4,72 @@
 #include <iostream>
 #include <algorithm>
 
-void example1() {
-    BPlusTree<int> tree(3);
-    for (int i = 0; i < 30; i++) {
-        int number = Random::randomInt(0, 1000);
-        tree.insert(i);
-    }
+void exampleSimple() {
+    int size = 20;
+    std::vector<int> data(size);
 
-    std::cout << std::endl << std::endl;
-    tree.print(std::cout);
-    std::cout << std::endl << std::endl;
-    tree.printSorted(std::cout);
-    std::cout << std::endl << std::endl;
-    std::cout << std::boolalpha << tree.includes(3);
-}
-
-void example2() {
-    int size = 30;
-    BPlusTree<int> tree(3);
-    std::vector<int> data(size, 0);
     for (int i = 0; i < size; i++){
-        data[i] =  Random::randomInt(0, 500);
+        data[i] = i + 1;
     }
-
-    for (auto &item: data) {
-        tree.insert(item);
-    }
-
-    tree.print(std::cout);
-    std::cout << "\n\n";
 
     std::random_device rd;
     std::mt19937 g(rd());
     std::shuffle(data.begin(), data.end(), g);
 
-    for (auto &item:data) {
+    BPlusTree<int> tree(3);
+
+    for(auto &item: data) {
+        tree.insert(item);
+    }
+
+    tree.print(std::cout);
+    std::cout << std::endl << std::endl;
+    tree.printSorted(std::cout);
+    std::cout << std::endl << std::endl;
+
+    std::shuffle(data.begin(), data.end(), g);
+
+    for(auto &item: data) {
         std::cout << "DELETING " << item << "\n";
         tree.remove(item);
         tree.print(std::cout);
-        std::cout << "\n\n";
+        std::cout << std::endl << std::endl;
     }
 }
 
 void exampleStudents() {
     auto students = getStudentsFromDB("../../department.db");
-    BPlusTree<Student> tree;
+    BPlusTree<Student> tree(3);
     for (auto &item:students) {
         tree.insert(*item);
     }
-
+    tree.print(std::cout);
     std::cout << std::endl << std::endl;
     tree.printSorted(std::cout);
+    std::cout << std::endl << std::endl;
+
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle(students.begin(), students.end(), g);
+
+    for (int i = 0; i < 15; i++) {
+        std::cout << "DELETING " << *students[i] << "\n";
+        tree.remove(*students[i]);
+    }
+
+    std::cout << std::endl << std::endl;
+    tree.print(std::cout);
+
+    for (int i = 0; i < 15; i++) {
+        tree.insert(*students[i]);
+    }
+
+    std::cout << std::endl << std::endl;
+    tree.print(std::cout);
 }
 
 int main() {
-    example2();
-
+    exampleSimple();
 
     return 0;
 }

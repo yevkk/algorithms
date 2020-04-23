@@ -34,7 +34,8 @@ void BPlusTree<DataType>::_printStep(OStream &output, std::shared_ptr<BPlusNode<
     if (!node.get()) {
         output << "*\n";
     } else {
-        output << "Data:\n";
+//        output << "Data:\n";
+        output << "Data: (" << node->size << ")\n";
         for (auto &item:node->data) {
             output << '|';
             for (int i = 0; i < level; i++) {
@@ -215,14 +216,12 @@ void BPlusTree<DataType>::insert(const DataType &key) {
  * @note considering key exists in node's data
  */
 template<typename DataType>
-void BPlusTree<DataType>::_remove_from_node(BPlusTree::Node_ptr node, const DataType &key) {
-    unsigned index = std::distance(node->data.begin(), std::find(node->data.begin(), node->data.end(), key));
+void BPlusTree<DataType>::_remove_from_node(BPlusTree::Node_ptr &node, unsigned index) {
+    auto key = node->data[index];
     node->data.erase(node->data.begin() + index);
     node->children.erase(node->children.begin() + index + 1);
     node->size--;
 
-
-    //termination conditions
     if (node == _root && node->size == 0) {
         _root = node->children[0];
         return;
@@ -248,7 +247,10 @@ void BPlusTree<DataType>::_remove_from_node(BPlusTree::Node_ptr node, const Data
         left_sib->data.pop_back();
 
         node->children.insert(node->children.begin() + 1, left_sib->children.back());
-        left_sib->data.pop_back();
+        left_sib->children.pop_back();
+
+        node->size++;
+        left_sib->size--;
 
         parent->data[child_index - 1] = node->data[0];
         return;
@@ -261,6 +263,9 @@ void BPlusTree<DataType>::_remove_from_node(BPlusTree::Node_ptr node, const Data
 
         node->children.push_back(right_sib->children[1]);
         right_sib->children.erase(right_sib->children.begin() + 1);
+
+        node->size++;
+        right_sib->size--;
 
         parent->data[child_index] = right_sib->data[0];
         return;
@@ -289,7 +294,7 @@ void BPlusTree<DataType>::_remove_from_node(BPlusTree::Node_ptr node, const Data
             left_sib->next_leaf = node->next_leaf;
         }
 
-        _remove_from_node(parent, parent->data[child_index - 1]);
+        _remove_from_node(parent, child_index - 1);
 
         return;
     }
@@ -317,7 +322,7 @@ void BPlusTree<DataType>::_remove_from_node(BPlusTree::Node_ptr node, const Data
             node->next_leaf = right_sib->next_leaf;
         }
 
-        _remove_from_node(parent, parent->data[child_index]);
+        _remove_from_node(parent, child_index);
         return;
     }
 }
@@ -328,7 +333,7 @@ void BPlusTree<DataType>::remove(const DataType &key) {
     auto[node, index] = _subtree_search(_root, key);
     if (!node) return;
 
-    _remove_from_node(node, key);
+    _remove_from_node(node, index);
 }
 
 #endif //B_PLUS_TREE_BPLUS_TREE_HXX
