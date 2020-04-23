@@ -218,15 +218,16 @@ template<typename DataType>
 void BPlusTree<DataType>::_remove_from_node(BPlusTree::Node_ptr node, const DataType &key) {
     unsigned index = std::distance(node->data.begin(), std::find(node->data.begin(), node->data.end(), key));
     node->data.erase(node->data.begin() + index);
-    node->children.pop_back(); //leaf children are equal to nullptr;
+    node->children.erase(node->children.begin() + index + 1);
     node->size--;
+
 
     //termination conditions
     if (node == _root && node->size == 0) {
         _root = node->children[0];
         return;
     }
-    if (node->size >= _min_node_fill || node == _root) return;
+    if (node == _root) return;
 
 
     auto parent = node->parent;
@@ -234,26 +235,89 @@ void BPlusTree<DataType>::_remove_from_node(BPlusTree::Node_ptr node, const Data
                                          std::find_if(parent->data.begin(), parent->data.end(),
                                                       [&key](const DataType &item) { return item > key; }));
 
+    if (child_index > 0) parent->data[child_index - 1] = node->data[0];
+
+    if (node->size >= _min_node_fill) return;
+
     auto left_sib = (child_index != 0) ? parent->children[child_index - 1] : nullptr;
     auto right_sib = (child_index < parent->size) ? parent->children[child_index + 1] : nullptr;
 
     if (left_sib.get() && left_sib->size - 1 >= _min_node_fill) {
         //take max element from left_sib;
+        node->data.insert(node->data.begin(), left_sib->data.back());
+        left_sib->data.pop_back();
+
+        node->children.insert(node->children.begin() + 1, left_sib->children.back());
+        left_sib->data.pop_back();
+
+        parent->data[child_index - 1] = node->data[0];
         return;
     }
 
     if (right_sib.get() && right_sib->size - 1 >= _min_node_fill) {
         //take min element from right_sib;
+        node->data.push_back(right_sib->data[0]);
+        right_sib->data.erase(right_sib->data.begin());
+
+        node->children.push_back(right_sib->children[1]);
+        right_sib->children.erase(right_sib->children.begin() + 1);
+
+        parent->data[child_index] = right_sib->data[0];
         return;
     }
 
-    if (left_sib.get()){
+    if (left_sib.get()) {
         //merge node with left_sib; recursively delete corresponding constraint element from parent;
+        unsigned new_size = node->size + left_sib->size;
+
+        std::vector<DataType> new_data;
+        new_data.reserve(new_size);
+        new_data.insert(new_data.end(), left_sib->data.begin(), left_sib->data.end());
+        new_data.insert(new_data.end(), node->data.begin(), node->data.end());
+
+        std::vector<Node_ptr> new_children;
+        new_children.reserve(new_size + 1);
+        new_children.insert(new_children.end(), left_sib->children.begin(), left_sib->children.end());
+        new_children.insert(new_children.end(), node->children.begin() + 1, node->children.end());
+
+        left_sib->size = new_size;
+        left_sib->data = new_data;
+        left_sib->children = new_children;
+
+        if (node->next_leaf.get()) {
+            node->next_leaf->prev_leaf = left_sib;
+            left_sib->next_leaf = node->next_leaf;
+        }
+
+        _remove_from_node(parent, parent->data[child_index - 1]);
+
         return;
     }
 
-    if (right_sib.get()){
+    if (right_sib.get()) {
         //merge node with right_sib; recursively delete corresponding constraint element from parent;
+        unsigned new_size = node->size + right_sib->size;
+
+        std::vector<DataType> new_data;
+        new_data.reserve(new_size);
+        new_data.insert(new_data.end(), node->data.begin(), node->data.end());
+        new_data.insert(new_data.end(), right_sib->data.begin(), right_sib->data.end());
+
+        std::vector<Node_ptr> new_children;
+        new_children.reserve(new_size + 1);
+        new_children.insert(new_children.end(), node->children.begin(), node->children.end());
+        new_children.insert(new_children.end(), right_sib->children.begin() + 1, right_sib->children.end());
+
+        node->size = new_size;
+        node->data = new_data;
+        node->children = new_children;
+
+        if (right_sib->next_leaf.get()) {
+            right_sib->next_leaf->prev_leaf = node;
+            node->next_leaf = right_sib->next_leaf;
+        }
+
+        _remove_from_node(parent, parent->data[child_index]);
         return;
     }
 }

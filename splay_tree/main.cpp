@@ -128,7 +128,7 @@ void example4(int count = 10) {
 
 
 int main() {
-    example2 ();
+    example1 (10);
 
     return 0;
 }

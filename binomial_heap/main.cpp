@@ -80,7 +80,7 @@ void example3(int count) {
 }
 
 int main() {
-    example1();
+    example3(9);
 
     return 0;
 }

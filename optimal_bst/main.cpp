@@ -30,11 +30,14 @@ void example2() {
     std::vector<double> p(data.size(), (1.0 / (1000 - 599)));
     std::vector<double> q(data.size(), 0);
 
-    q[0] = (10 * data[0].getAveragePoint() - 599) / (1000 - 599);
+    //q[0] = (10 * data[0].getAveragePoint() - 599) / (1000 - 599);
+    q[0] = 0;
     for (int i = 1; i < q.size() - 1; i++) {
-        q[i] = (10 * (data[i].getAveragePoint() - data[i - 1].getAveragePoint()) - 1) / (1000 - 599);
+        //q[i] = (10 * (data[i].getAveragePoint() - data[i - 1].getAveragePoint()) - 1) / (1000 - 599);
+        q[i] = 0;
     }
-    q[q.size() - 1] = (1000 - 10 * data[data.size() - 1].getAveragePoint()) / (1000 - 599);
+    //q[q.size() - 1] = (1000 - 10 * data[data.size() - 1].getAveragePoint()) / (1000 - 599);
+    q[q.size() - 1] = 0;
 
 
     //Display values of data and probabilities:
