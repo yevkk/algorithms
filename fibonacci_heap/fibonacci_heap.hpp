@@ -19,8 +19,6 @@ public:
     bool mark;
 
     explicit FBNode(const DataType &data);
-
-    ~FBNode() = default;
 };
 
 template<typename DataType>
@@ -34,6 +32,10 @@ private:
     template<typename OStream>
     void _printStep(OStream &output, NodePtr node, unsigned level_size, unsigned level);
 
+    void _link(NodePtr res_child, NodePtr res_parent);
+
+    void _consolidate();
+
 public:
     FibonacciHeap();
 
@@ -43,6 +45,8 @@ public:
     void insert(const DataType &key);
 
     DataType min();
+
+    DataType extractMin();
 
     template<typename T>
     friend FibonacciHeap<T> heapUnion(FibonacciHeap<T> *heapL, FibonacciHeap<T> *heapR);

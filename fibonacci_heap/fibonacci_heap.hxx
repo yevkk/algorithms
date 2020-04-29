@@ -3,6 +3,10 @@
 
 #include "fibonacci_heap.hpp"
 
+#include <cmath>
+#include <vector>
+#include <utility>
+
 template<typename DataType>
 FBNode<DataType>::FBNode(const DataType &data) :
         data{data},
@@ -29,7 +33,7 @@ FibonacciHeap<DataType>::_printStep(OStream &output, FibonacciHeap::NodePtr node
         for (int j = 0; j < level; j++) {
             output << '\t' << '|';
         }
-        if (!node.get()) {
+        if (!node) {
             output << "*\n";
         } else {
             output << node->data << " (degree: " << node->degree << ")\n";
@@ -52,7 +56,7 @@ template<typename DataType>
 void FibonacciHeap<DataType>::insert(const DataType &key) {
     NodePtr new_node = std::make_shared<FBNode<DataType>>(key);
 
-    if (_min.get()) {
+    if (_min) {
         _min->left->right = new_node;
         new_node->left = _min->left;
 
@@ -71,17 +75,121 @@ void FibonacciHeap<DataType>::insert(const DataType &key) {
 
 template<typename DataType>
 DataType FibonacciHeap<DataType>::min() {
-    return (_min.get()) ? _min.data : DataType();
+    return (_min) ? _min.data : DataType();
 }
 
+
+template<typename DataType>
+void FibonacciHeap<DataType>::_link(FibonacciHeap::NodePtr res_child, FibonacciHeap::NodePtr res_parent) {
+    res_child->left->right = res_child->right;
+    res_child->right->left = res_child->left;
+
+    if (res_parent->child) {
+        auto last_child = res_parent->child->left;
+
+        last_child->right = res_child;
+        res_child->left = last_child;
+        res_child->right = res_parent->child;
+        res_parent->child->left = res_child;
+
+        res_parent->child = res_child;
+    } else {
+        res_child->right = res_child->left = res_child;
+        res_parent->child = res_child;
+    }
+    res_parent->degree++;
+    res_parent->mark = false;
+}
+
+
+template<typename DataType>
+void FibonacciHeap<DataType>::_consolidate() {
+    std::vector<NodePtr> A(log2(_n) + 1, nullptr);
+
+    auto root = _min;
+    for (int i = 1; i <= _trees_count; i++) {
+        int d = root->degree;
+        while (A[d]) {
+            auto ptr = A[d];
+            if (root->data > ptr->data) {
+                std::swap(root, ptr);
+            }
+            _link(ptr, root);
+            A[d] = nullptr;
+            d++;
+        }
+        A[d] = root;
+        root = root->right;
+    }
+
+    _min = nullptr;
+    for (auto &item:A) {
+        if (item) {
+            if (!_min) {
+                _min = item;
+                _min->left = _min->right = _min;
+                _trees_count = 1;
+            } else {
+                auto tail = _min->left;
+                tail->right = item;
+                item->left = tail;
+                item->right = _min;
+                _min->left = item;
+                _trees_count++;
+
+                if (_min->data > item->data)
+                    _min = item;
+            }
+        }
+    }
+}
+
+template<typename DataType>
+DataType FibonacciHeap<DataType>::extractMin() {
+    auto min_node = _min;
+    if (!min_node)
+        return DataType();
+
+    if (_n == 1) {
+        _min = nullptr;
+        return min_node->data;
+    }
+
+    auto child = min_node->child;
+    if (child) {
+        for (int i = 1; i <= min_node->degree; i++) {
+            child->parent = nullptr;
+            child = child->right;
+        }
+
+        auto first_child = min_node->child;
+        auto last_child = min_node->child->left;
+        auto tail = min_node->left;
+
+        first_child->left = tail;
+        tail->right = first_child;
+        min_node->right->left = last_child;
+        last_child->right = min_node->right;
+    }
+
+    _n--;
+    _trees_count = _trees_count - 1 + min_node->degree;
+
+    _min = _min->right;
+    _consolidate();
+
+    return min_node->data;
+}
+
+
 template<typename T>
-FibonacciHeap<T> heapUnion(FibonacciHeap<T>* heapL, FibonacciHeap<T>* heapR) {
-    if (!heapL->_min.get()){
+FibonacciHeap<T> heapUnion(FibonacciHeap<T> *heapL, FibonacciHeap<T> *heapR) {
+    if (!heapL->_min) {
         delete heapL;
         return *heapR;
     }
 
-    if (!heapR->_min.get()){
+    if (!heapR->_min) {
         delete heapR;
         return *heapL;
     }

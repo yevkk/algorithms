@@ -1,6 +1,7 @@
 #include "fibonacci_heap.hpp"
 
 #include <iostream>
+#include <utility>
 
 int main() {
     FibonacciHeap<int> heap1;
@@ -19,6 +20,8 @@ int main() {
 
     auto heap3 = heapUnion(&heap1, &heap2);
     heap3.print(std::cout);
+    std::cout << std::endl << std::endl;
+
 
     return 0;
 }
