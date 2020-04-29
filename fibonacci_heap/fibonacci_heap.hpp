@@ -29,11 +29,28 @@ class FibonacciHeap {
 private:
     NodePtr _min;
     unsigned _n; //amount of nodes in heap;
+    unsigned _trees_count;
+
+    template<typename OStream>
+    void _printStep(OStream &output, NodePtr node, unsigned level_size, unsigned level);
+
 public:
     FibonacciHeap();
 
+    template<typename OStream>
+    void print(OStream &output);
+
+    void insert(const DataType &key);
+
+    DataType min();
+
+    template<typename T>
+    friend FibonacciHeap<T> heapUnion(FibonacciHeap<T> *heapL, FibonacciHeap<T> *heapR);
 };
 
+/*
+ * @note deletes heapL and heapR;
+ */
 
 
 #include "fibonacci_heap.hxx"
