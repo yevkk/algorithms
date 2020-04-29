@@ -19,7 +19,7 @@ int main() {
     heap.print(std::cout);
     std::cout << std::endl << std::endl;
 
-    heap.decreaseKey(heap.minNode()->child, 0);
+    heap.deleteNode(heap.minNode()->child);
     heap.print(std::cout);
     std::cout << std::endl << std::endl;
 

@@ -56,6 +56,9 @@ public:
 
     void decreaseKey(NodePtr node, const DataType& new_value);
 
+    //can provide undefined behavior for DataType != int or Student
+    void deleteNode(NodePtr node);
+
     template<typename T>
     friend FibonacciHeap<T> heapUnion(FibonacciHeap<T> *heapL, FibonacciHeap<T> *heapR);
 };

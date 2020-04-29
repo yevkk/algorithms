@@ -2,12 +2,13 @@
 #define FIBONACCI_HEAP_FIBONACCI_HEAP_HXX
 
 #include "fibonacci_heap.hpp"
+#include "department.hpp"
 
 #include <cmath>
 #include <cassert>
 #include <vector>
 #include <utility>
-
+#include <string>
 
 template<typename DataType>
 FBNode<DataType>::FBNode(const DataType &data) :
@@ -252,6 +253,27 @@ void FibonacciHeap<DataType>::_cascadingCut(FibonacciHeap::NodePtr y) {
             _cascadingCut(parent);
         }
     }
+}
+
+template<typename DataType>
+void FibonacciHeap<DataType>::deleteNode(FibonacciHeap::NodePtr node) {
+    if (!node) return;
+    decreaseKey(node, *(reinterpret_cast<DataType*>(0)));
+    extractMin();
+}
+
+template<>
+void FibonacciHeap<int>::deleteNode(FibonacciHeap::NodePtr node) {
+    if (!node) return;
+    decreaseKey(node, -INFINITY);
+    extractMin();
+}
+
+template<>
+void FibonacciHeap<Student>::deleteNode(FibonacciHeap::NodePtr node) {
+    if (!node) return;
+    decreaseKey(node, Student("null", 0, 0));
+    extractMin();
 }
 
 template<typename DataType>
