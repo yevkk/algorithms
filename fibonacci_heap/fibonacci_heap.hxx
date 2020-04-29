@@ -4,8 +4,10 @@
 #include "fibonacci_heap.hpp"
 
 #include <cmath>
+#include <cassert>
 #include <vector>
 #include <utility>
+
 
 template<typename DataType>
 FBNode<DataType>::FBNode(const DataType &data) :
@@ -78,6 +80,11 @@ DataType FibonacciHeap<DataType>::min() {
     return (_min) ? _min.data : DataType();
 }
 
+template<typename DataType>
+std::shared_ptr<FBNode<DataType>> FibonacciHeap<DataType>::minNode() {
+    return _min;
+}
+
 
 template<typename DataType>
 void FibonacciHeap<DataType>::_link(FibonacciHeap::NodePtr res_child, FibonacciHeap::NodePtr res_parent) {
@@ -99,6 +106,8 @@ void FibonacciHeap<DataType>::_link(FibonacciHeap::NodePtr res_child, FibonacciH
     }
     res_parent->degree++;
     res_parent->mark = false;
+
+    res_child->parent = res_parent;
 }
 
 
@@ -213,5 +222,53 @@ FibonacciHeap<T> heapUnion(FibonacciHeap<T> *heapL, FibonacciHeap<T> *heapR) {
     return result;
 }
 
+template<typename DataType>
+void FibonacciHeap<DataType>::_cut(FibonacciHeap::NodePtr x, FibonacciHeap::NodePtr y) {
+    x->left->right = x->right;
+    x->right->left = x->left;
+    if (x == y->child) {
+        y->child = x->right;
+    }
+    y->degree--;
+
+    _min->left->right = x;
+    x->left = _min->left;
+    x->right = _min;
+    _min->left = x;
+    _trees_count++;
+
+    x->parent = nullptr;
+    x->mark = false;
+}
+
+template<typename DataType>
+void FibonacciHeap<DataType>::_cascadingCut(FibonacciHeap::NodePtr y) {
+    auto parent = y->parent;
+    if (parent) {
+        if (!y->mark) {
+            y->mark = true;
+        } else {
+            _cut(y, parent);
+            _cascadingCut(parent);
+        }
+    }
+}
+
+template<typename DataType>
+void FibonacciHeap<DataType>::decreaseKey(FibonacciHeap::NodePtr node, const DataType &new_value) {
+    if (!node) return;
+    assert(new_value < node->data);
+    node->data = new_value;
+
+    auto parent = node->parent;
+    if (parent && node->data < node->parent->data) {
+        _cut(node, parent);
+        _cascadingCut(parent);
+    }
+
+    if (node->data < _min->data) {
+        _min = node;
+    }
+}
 
 #endif //FIBONACCI_HEAP_FIBONACCI_HEAP_HXX

@@ -36,6 +36,10 @@ private:
 
     void _consolidate();
 
+    void _cut(NodePtr x, NodePtr y);
+
+    void _cascadingCut(NodePtr y);
+
 public:
     FibonacciHeap();
 
@@ -46,7 +50,11 @@ public:
 
     DataType min();
 
+    NodePtr minNode();
+
     DataType extractMin();
+
+    void decreaseKey(NodePtr node, const DataType& new_value);
 
     template<typename T>
     friend FibonacciHeap<T> heapUnion(FibonacciHeap<T> *heapL, FibonacciHeap<T> *heapR);

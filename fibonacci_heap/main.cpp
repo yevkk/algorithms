@@ -4,22 +4,23 @@
 #include <utility>
 
 int main() {
-    FibonacciHeap<int> heap1;
-    FibonacciHeap<int> heap2;
-    heap1.insert(3);
-    heap1.insert(5);
-    heap1.insert(2);
-    heap1.print(std::cout);
+    FibonacciHeap<int> heap;
+    heap.insert(3);
+    heap.insert(5);
+    heap.insert(2);
+    heap.insert(7);
+    heap.insert(1);
+    heap.insert(4);
+
+    heap.print(std::cout);
     std::cout << std::endl << std::endl;
 
-    heap2.insert(7);
-    heap2.insert(1);
-    heap2.insert(4);
-    heap2.print(std::cout);
+    heap.extractMin();
+    heap.print(std::cout);
     std::cout << std::endl << std::endl;
 
-    auto heap3 = heapUnion(&heap1, &heap2);
-    heap3.print(std::cout);
+    heap.decreaseKey(heap.minNode()->child, 0);
+    heap.print(std::cout);
     std::cout << std::endl << std::endl;
 
 
