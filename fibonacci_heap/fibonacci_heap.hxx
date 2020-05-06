@@ -39,7 +39,7 @@ FibonacciHeap<DataType>::_printStep(OStream &output, FibonacciHeap::NodePtr node
         if (!node) {
             output << "*\n";
         } else {
-            output << node->data << " (degree: " << node->degree << ")\n";
+            output << node->data << " (degree: " << node->degree << ", mark: " << node->mark << ")\n";
             _printStep(output, node->child, node->degree, level + 1);
         }
 
@@ -57,7 +57,7 @@ void FibonacciHeap<DataType>::print(OStream &output) {
 
 template<typename DataType>
 void FibonacciHeap<DataType>::insert(const DataType &key) {
-    NodePtr new_node = std::make_shared<FBNode<DataType>>(key);
+    NodePtr new_node = std::make_shared<FBNode<DataType>>(FBNode<DataType>(key));
 
     if (_min) {
         _min->left->right = new_node;
@@ -109,20 +109,26 @@ void FibonacciHeap<DataType>::_link(FibonacciHeap::NodePtr res_child, FibonacciH
     res_parent->mark = false;
 
     res_child->parent = res_parent;
+    _trees_count--;
 }
 
 
 template<typename DataType>
 void FibonacciHeap<DataType>::_consolidate() {
-    std::vector<NodePtr> A(log2(_n) + 1, nullptr);
+    std::vector<NodePtr> A(log2(_n) + 2, nullptr);
 
     auto root = _min;
-    for (int i = 1; i <= _trees_count; i++) {
+    auto roots_count = _trees_count;
+    for (int i = 1; i <= roots_count; i++) {
         int d = root->degree;
         while (A[d]) {
             auto ptr = A[d];
+            if (ptr == root) break;
             if (root->data > ptr->data) {
-                std::swap(root, ptr);
+                std::swap(root->data, ptr->data);
+                std::swap(root->degree, ptr->degree);
+                std::swap(root->mark, ptr->mark);
+                std::swap(root->child, ptr->child);
             }
             _link(ptr, root);
             A[d] = nullptr;
@@ -258,14 +264,14 @@ void FibonacciHeap<DataType>::_cascadingCut(FibonacciHeap::NodePtr y) {
 template<typename DataType>
 void FibonacciHeap<DataType>::deleteNode(FibonacciHeap::NodePtr node) {
     if (!node) return;
-    decreaseKey(node, *(reinterpret_cast<DataType*>(0)));
+    decreaseKey(node, *(reinterpret_cast<DataType *>(0)));
     extractMin();
 }
 
 template<>
 void FibonacciHeap<int>::deleteNode(FibonacciHeap::NodePtr node) {
     if (!node) return;
-    decreaseKey(node, -INFINITY);
+    decreaseKey(node, -INT_MAX);
     extractMin();
 }
 

@@ -1,27 +1,62 @@
 #include "fibonacci_heap.hpp"
 
 #include <iostream>
-#include <utility>
+#include <algorithm>
+#include <random>
 
-int main() {
+void exampleInt() {
     FibonacciHeap<int> heap;
-    heap.insert(3);
-    heap.insert(5);
-    heap.insert(2);
-    heap.insert(7);
-    heap.insert(1);
-    heap.insert(4);
+    std::vector<int> data {2, 23, 43, 12, 23 ,21, 34, 13, 3};
 
-    heap.print(std::cout);
-    std::cout << std::endl << std::endl;
+    for (int i = 1; i <= data.size(); i++) {
+        std::cout << "INSERTING " << data[i-1] << std::endl;
+        heap.insert(data[i-1]);
+        heap.print(std::cout);
+        std::cout << std::endl << std::endl;
+    }
 
+    std::cout << "EXTRACTING MIN" << std::endl;
     heap.extractMin();
     heap.print(std::cout);
     std::cout << std::endl << std::endl;
 
-    heap.deleteNode(heap.minNode()->child);
+    auto min = heap.minNode();
+    auto ptr = min->child->right->child;
+
+    std::cout << "DELETING " << ptr->data << std::endl;
+    heap.deleteNode(ptr);
     heap.print(std::cout);
     std::cout << std::endl << std::endl;
+
+    auto ptr2 = min->child->right;
+    std::cout << "DECREASING " << ptr2->data << " TO -100" << std::endl;
+    heap.decreaseKey(ptr2, -100);
+    heap.print(std::cout);
+    std::cout << std::endl << std::endl;
+
+}
+
+void exampleStudents() {
+
+    auto students = getStudentsFromDB("../../department.db");
+    FibonacciHeap<Student> heap;
+    for (int i = 1; i <= 50; i++) {
+        std::cout << i << " INSERTING " << *students[i-1] << std::endl;
+        heap.insert(*students[i-1]);
+        heap.print(std::cout);
+        std::cout << std::endl << std::endl;
+
+        if (i % 5 == 0) {
+            std::cout << i << " EXTRACTING MIN" << std::endl;
+            heap.extractMin();
+            heap.print(std::cout);
+            std::cout << std::endl << std::endl;
+        }
+    }
+}
+
+int main() {
+    exampleInt();
 
 
     return 0;
