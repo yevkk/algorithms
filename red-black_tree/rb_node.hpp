@@ -10,14 +10,14 @@ enum COLOR {
 class RBNode {
 private:
     COLOR _color;
-    Student *_data;
+    int _data;
 public:
     RBNode *parent;
     RBNode *left;
     RBNode *right;
     int size;
 
-    explicit RBNode(Student *data) :
+    explicit RBNode(int data) :
             _data(data),
             parent(nullptr),
             left(nullptr),
@@ -41,7 +41,7 @@ public:
         return _color;
     };
 
-    Student *data() {
+    int data() {
         return _data;
     };
 };

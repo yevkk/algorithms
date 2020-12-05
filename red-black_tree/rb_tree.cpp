@@ -1,7 +1,7 @@
 #include "rb_tree.hpp"
 
 RBTree::RBTree() {
-    _nullNode = new RBNode(nullptr);
+    _nullNode = new RBNode(0);
     _nullNode->parent = _nullNode->left = _nullNode->right = _nullNode;
     _nullNode->setColor(BLACK);
     _nullNode->size = 0;
@@ -26,7 +26,7 @@ void RBTree::printStep(RBNode *node, int level) {
         std::cout << '*' << std::endl;
     } else {
         std::cout << osRank(node) << "| ";
-        std::cout << *(node->data()) << "   (c:" << node->color() << ", s:" << node->size << ")" << std::endl;
+        std::cout << node->data() << "   (c:" << node->color() << ", s:" << node->size << ")" << std::endl;
         printStep(node->left, level + 1);
         printStep(node->right, level + 1);
     }
@@ -89,11 +89,11 @@ RBNode *RBTree::predecessor(RBNode *node) {
     return ptr;
 }
 
-RBNode *RBTree::search(RBNode *root, Student key) {
-    if ((root == _nullNode) || (key == *(root->data()))) {
+RBNode *RBTree::search(RBNode *root, int key) {
+    if ((root == _nullNode) || (key == root->data())) {
         return root;
     }
-    if (key < *(root->data())) {
+    if (key < root->data()) {
         return search(root->left, key);
     } else {
         return search(root->right, key);
@@ -148,7 +148,7 @@ void RBTree::insertNode(RBNode *node) {
     while (x != _nullNode) {
         y = x;
         x->size++;
-        if (*(node->data()) < *(x->data())) {
+        if (node->data() < x->data()) {
             x = x->left;
         } else {
             x = x->right;
@@ -157,7 +157,7 @@ void RBTree::insertNode(RBNode *node) {
     node->parent = y;
     if (y == _nullNode) {
         _root = node;
-    } else if (*(node->data()) < *(y->data())) {
+    } else if (node->data() < y->data()) {
         y->left = node;
     } else {
         y->right = node;

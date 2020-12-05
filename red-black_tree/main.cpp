@@ -4,28 +4,20 @@
 #include <iostream>
 
 int main() {
-    auto students = getStudentsFromDB("../../department.db");
-    auto tree = new RBTree();
-    for (auto &e:students) {
-        auto node = new RBNode(e);
-        tree->insertNode(node);
+    std::vector<int> a{3, 2, 1, 6, 34, 21, 65, 76, 4, 11, 32, 78, 44, 33};
+    RBTree A;
+    for (const auto& item : a) {
+        A.insertNode(new RBNode(item));
     }
-
-    tree->print();
-    std::cout << std::endl << std::endl;
-
-    for (int i = 1; i <= 50; i++) {
-        std::cout << *(tree->osSelect(i)->data()) << std::endl;
+    A.print();
+    std::cout << "\n\n\n";
+    std::vector<int> b{33, 76, 21, 34, 2, 1, 3, 44, 6, 11, 4};
+    for (const auto& item : b) {
+        A.deleteNode(A.search(A.root(), item));
+        std::cout << "DELETED " << item << std::endl;
+        A.print();
+        std::cout << "\n\n\n";
     }
-    std::cout << std::endl << std::endl;
-
-    for (int i = 1; i <= 40; i++) {
-        tree->deleteNode(tree->root());
-    }
-
-    tree->print();
-    std::cout << std::endl << std::endl;
-
 
     return 0;
 }

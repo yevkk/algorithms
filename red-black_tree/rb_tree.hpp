@@ -35,7 +35,7 @@ public:
 
     RBNode *predecessor(RBNode *node);
 
-    RBNode *search(RBNode *root, Student key);
+    RBNode *search(RBNode *root, int key);
 
     void leftRotate(RBNode *x);
 
